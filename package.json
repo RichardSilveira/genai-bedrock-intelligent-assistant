@@ -9,6 +9,9 @@
   "lint-staged": {
     "**/*.{tf,tfvars}": [
       "node scripts/terraform-multi-fmt"
+    ],
+      "**/*.py": [
+      "black --fast"
     ]
   },
   "devDependencies": {
