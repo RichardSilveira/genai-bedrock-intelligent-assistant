@@ -4,11 +4,18 @@
   "description": "A Generative AI intelligent assistant using AWS Bedrock & RAG, built applying production-ready principles with its infrastructure managed via IaC (Infrastructure as Code). It enables contextual Q&A from diverse data sources (unstructured/structured). A portfolio project demonstrating robust GenAI application development on AWS.",
   "author": "Richard Lee",
   "scripts": {
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "python-setup": "python3 -m venv .venv && echo 'Virtual environment .venv created. Activate it by running: source .venv/bin/activate'",
+    "python-install": "pip install -r requirements.txt",
+    "python-install-dev": "pip install -r requirements-dev.txt"
   },
   "lint-staged": {
     "**/*.{tf,tfvars}": [
-      "node scripts/terraform-multi-fmt"
+      "node scripts/terraform-multi-fmt",
+      "terraform-docs markdown table --output-file README.md --output-mode inject ."
+    ],
+      "**/*.py": [
+      "black --fast"
     ]
   },
   "devDependencies": {
