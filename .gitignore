@@ -16,6 +16,9 @@ iac/.terraform.lock.hcl
 iac/*.zip
 iac/terraform.local.plan
 
+# Misc
+.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

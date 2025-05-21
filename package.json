@@ -12,7 +12,7 @@
   "lint-staged": {
     "**/*.{tf,tfvars}": [
       "node scripts/terraform-multi-fmt",
-      "terraform-docs markdown table --output-file README.md --output-mode inject ."
+      "pushd iac && terraform-docs markdown table --output-file README.md --output-mode inject . && popd"
     ],
       "**/*.py": [
       "black --fast"
