@@ -1,3 +1,20 @@
+# Husky
+.husky/*
+!.husky/pre-commit
+!.husky/commit-msg
+node_modules
+package-lock.json
+
+# Terraform
+**/.terraform/*
+
+*.tfstate
+*.tfstate.*
+*.tfvars
+iac/.terraform.lock.hcl
+iac/*.zip
+iac/terraform.local.plan
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

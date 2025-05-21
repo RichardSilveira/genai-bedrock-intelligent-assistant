@@ -1,0 +1,23 @@
+{
+  "name": "genai-bedrock-intelligent-assistant",
+  "version": "0.0.1",
+  "description": "A Generative AI intelligent assistant using AWS Bedrock & RAG, built applying production-ready principles with its infrastructure managed via IaC (Infrastructure as Code). It enables contextual Q&A from diverse data sources (unstructured/structured). A portfolio project demonstrating robust GenAI application development on AWS.",
+  "author": "Richard Lee",
+  "scripts": {
+    "lint-staged": "lint-staged"
+  },
+  "lint-staged": {
+    "**/*.{tf,tfvars}": [
+      "node scripts/terraform-multi-fmt"
+    ]
+  },
+  "devDependencies": {
+    "@commitlint/cli": "19.8.1",
+    "@commitlint/config-conventional": "19.8.1",
+    "husky": "9.1.7",
+    "lint-staged": "15.5.2"
+  },
+  "dependencies": {
+    "lts": "^2.0.0"
+  }
+}
