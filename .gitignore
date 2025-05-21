@@ -7,6 +7,7 @@ package-lock.json
 
 # Terraform
 **/.terraform/*
+iac/backend.tf
 
 *.tfstate
 *.tfstate.*
