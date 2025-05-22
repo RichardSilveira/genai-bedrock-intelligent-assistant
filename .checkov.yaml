@@ -1,0 +1,8 @@
+---
+directory:
+  - iac
+output: cli
+framework: terraform
+compact: true
+quiet: false
+summary-position: bottom
