@@ -20,3 +20,4 @@ brew install terraform
 brew install terraform-docs
 brew install python
 brew install node
+brew install rust
