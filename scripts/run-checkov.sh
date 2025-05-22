@@ -22,18 +22,3 @@ printf ' - %s\n' "${FILES[@]}"
 for file in "${FILES[@]}"; do
   checkov --file "$file" --quiet || exit 1
 done
-
-# #!/bin/bash
-
-# # Check if checkov is installed
-# if ! command -v checkov &> /dev/null; then
-#     echo "Checkov is not installed. Installing now..."
-#     pip install checkov
-# fi
-
-# # Run checkov on the iac directory
-# echo "Running Checkov security scan on Terraform files..."
-# checkov --directory iac --framework terraform
-
-# # Exit with the same status code as checkov
-# exit $?
