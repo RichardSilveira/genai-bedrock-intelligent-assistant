@@ -7,14 +7,16 @@
     "lint-staged": "lint-staged",
     "python-setup": "python3 -m venv .venv && echo 'Virtual environment .venv created. Activate it by running: source .venv/bin/activate'",
     "python-install": "pip install -r requirements.txt",
-    "python-install-dev": "pip install -r requirements-dev.txt"
+    "python-install-dev": "pip install -r requirements-dev.txt",
+    "checkov": "./scripts/run-checkov.sh"
   },
   "lint-staged": {
     "**/*.{tf,tfvars}": [
       "node scripts/terraform-multi-fmt",
-      "./scripts/update-terraform-docs.sh"
+      "./scripts/update-terraform-docs.sh",
+      "./scripts/run-checkov.sh"
     ],
-      "**/*.py": [
+    "**/*.py": [
       "black --fast"
     ]
   },
