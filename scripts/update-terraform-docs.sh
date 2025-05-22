@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-# Assume this script is run from project root
-pushd iac
-terraform-docs markdown table --output-file README.md --output-mode inject .
-popd
+# Find all directories under 'iac' that contain .tf files
+find ./iac -type f -name "*.tf" -exec dirname {} \; | sort -u | while read dir; do
+  echo "Generating docs for: $dir"
+  terraform-docs markdown table --output-file README.md --output-mode inject "$dir"
+done
