@@ -53,3 +53,9 @@ variable "private_subnet_2_az" {
   description = "Availability zone for the second private subnet (e.g., us-east-1b)."
   type        = string
 }
+
+variable "tags" {
+  description = "Tags to apply to all resources."
+  type        = map(string)
+  default     = {}
+}
