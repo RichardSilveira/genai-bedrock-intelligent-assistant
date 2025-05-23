@@ -58,6 +58,38 @@ resource "aws_s3_bucket_versioning" "kb_documents" {
 # OpenSearch Serverless Collection and Policies
 # --------------------------------------------------
 
+resource "aws_opensearchserverless_security_policy" "encryption" {
+  name = "${var.prefix}-kb-encryption"
+  type = "encryption"
+  policy = jsonencode({
+    Rules = [
+      {
+        ResourceType = "collection"
+        Resource     = ["collection/${var.prefix}-kb-collection"],
+      }
+    ],
+    AWSOwnedKey = true
+  })
+}
+
+# Network policy to enable public access
+# NOTE: This will be updated to private access via VPC endpoint later
+resource "aws_opensearchserverless_security_policy" "network" {
+  name = "${var.prefix}-kb-network"
+  type = "network"
+  policy = jsonencode([
+    {
+      Rules = [
+        {
+          ResourceType = "collection",
+          Resource     = ["collection/${var.prefix}-kb-collection"]
+        }
+      ],
+      AllowFromPublic = true
+    }
+  ])
+}
+
 resource "aws_opensearchserverless_collection" "this" {
   name = "${var.prefix}-kb-collection"
   type = "VECTORSEARCH"
@@ -65,40 +97,33 @@ resource "aws_opensearchserverless_collection" "this" {
   tags = merge(local.combined_tags, {
     Name = "${var.prefix}-kb-collection"
   })
-}
 
-resource "aws_opensearchserverless_security_policy" "this" {
-  name = "${var.prefix}-kb-security-policy"
-  type = "encryption"
-  policy = jsonencode({
-    Rules = [
-      {
-        Resource     = ["collection/${aws_opensearchserverless_collection.this.name}"],
-        ResourceType = "collection"
-      }
-    ],
-    AWSOwnedKey = true
-  })
+  depends_on = [
+    aws_opensearchserverless_security_policy.encryption,
+    aws_opensearchserverless_security_policy.network
+  ]
 }
 
 resource "aws_opensearchserverless_access_policy" "this" {
   name = "${var.prefix}-kb-access-policy"
   type = "data"
-  policy = jsonencode({
-    Rules = [
-      {
-        ResourceType = "collection",
-        Resource     = ["collection/${aws_opensearchserverless_collection.this.name}"],
-        Permission = [
-          "aoss:CreateCollectionItems",
-          "aoss:DeleteCollectionItems",
-          "aoss:UpdateCollectionItems",
-          "aoss:DescribeCollectionItems"
-        ]
-      }
-    ],
-    Principal = [aws_iam_role.bedrock.arn]
-  })
+  policy = jsonencode([
+    {
+      Rules = [
+        {
+          ResourceType = "collection",
+          Resource     = ["collection/${aws_opensearchserverless_collection.this.name}"],
+          Permission = [
+            "aoss:CreateCollectionItems",
+            "aoss:DeleteCollectionItems",
+            "aoss:UpdateCollectionItems",
+            "aoss:DescribeCollectionItems"
+          ]
+        }
+      ],
+      Principal = [aws_iam_role.bedrock.arn]
+    }
+  ])
 }
 
 # --------------------------------------------------
