@@ -12,6 +12,12 @@
 - Create a `local.auto.tfvars` and fill it based on the [variables.tf](variables.tf) file.
 - Update the [vpc.tf](vpc.tf) file based on the region you're intended to use
 
+## Networking Architecture
+
+The diagram below illustrates the networking components provisioned by the infrastructure code. While networking is not the main focus of this repository, it demonstrates production-grade VPC design and AWS best practices.
+
+![Networking Components](./assets/networking-components.drawio.png)
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

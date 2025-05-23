@@ -39,7 +39,7 @@ resource "aws_subnet" "public_1" {
 
   map_public_ip_on_launch = false
 
-  tags = merge(var.tags, { Name = "${var.name}-public-1" })
+  tags = merge(var.tags, { Name = "${var.name}-public-subnet-1" })
 }
 
 resource "aws_subnet" "public_2" {
@@ -49,7 +49,7 @@ resource "aws_subnet" "public_2" {
 
   map_public_ip_on_launch = false
 
-  tags = merge(var.tags, { Name = "${var.name}-public-2" })
+  tags = merge(var.tags, { Name = "${var.name}-public-subnet-2" })
 }
 
 # --------------------------------------------------
@@ -63,7 +63,7 @@ resource "aws_subnet" "private_1" {
 
   map_public_ip_on_launch = false
 
-  tags = merge(var.tags, { Name = "${var.name}-private-1" })
+  tags = merge(var.tags, { Name = "${var.name}-private-subnet-1" })
 }
 
 resource "aws_subnet" "private_2" {
@@ -73,7 +73,7 @@ resource "aws_subnet" "private_2" {
 
   map_public_ip_on_launch = false
 
-  tags = merge(var.tags, { Name = "${var.name}-private-2" })
+  tags = merge(var.tags, { Name = "${var.name}-private-subnet-2" })
 }
 
 # --------------------------------------------------
