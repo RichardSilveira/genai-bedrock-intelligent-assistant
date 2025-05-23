@@ -57,6 +57,7 @@ No modules.
 | <a name="input_public_subnet_1_cidr"></a> [public\_subnet\_1\_cidr](#input\_public\_subnet\_1\_cidr) | CIDR block for the first public subnet (e.g., 10.0.1.0/24). | `string` | n/a | yes |
 | <a name="input_public_subnet_2_az"></a> [public\_subnet\_2\_az](#input\_public\_subnet\_2\_az) | Availability zone for the second public subnet (e.g., us-east-1b). | `string` | n/a | yes |
 | <a name="input_public_subnet_2_cidr"></a> [public\_subnet\_2\_cidr](#input\_public\_subnet\_2\_cidr) | CIDR block for the second public subnet (e.g., 10.0.2.0/24). | `string` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to all resources. | `map(string)` | `{}` | no |
 | <a name="input_vpc_enable_dns_hostnames"></a> [vpc\_enable\_dns\_hostnames](#input\_vpc\_enable\_dns\_hostnames) | Enable DNS hostnames in the VPC. | `bool` | `true` | no |
 
 ## Outputs

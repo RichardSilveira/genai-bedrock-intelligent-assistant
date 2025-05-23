@@ -1,5 +1,5 @@
 variable "vpc_config" {
-  description = "Configuration for the VPC to be deployed"
+  description = "VPC Configuration."
   type = object({
     name                     = string
     cidr_block               = string
