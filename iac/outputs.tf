@@ -12,3 +12,8 @@ output "private_subnet_ids" {
   description = "The IDs of the private subnets"
   value       = module.networking.private_subnet_ids
 }
+
+output "nat_gateway_ids" {
+  description = "The IDs of the NAT Gateways"
+  value       = module.networking.nat_gateway_ids
+}
