@@ -11,6 +11,7 @@
 - If `aws_profile` is not set, Terraform will use your default AWS CLI profile.
 - Create a `local.auto.tfvars` and fill it based on the [variables.tf](variables.tf) file.
 - Update the [vpc.tf](vpc.tf) file based on the region you're intended to use
+- Run export AWS_ACCESS_KEY_ID=<ci_principal_arn access-key> && export AWS_SECRET_ACCESS_KEY=<ci_principal_arn secret> in terminal before run any terraform command
 
 ## Networking Architecture
 
@@ -35,6 +36,7 @@ The diagram below illustrates the networking components provisioned by the infra
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_bedrock_rag"></a> [bedrock\_rag](#module\_bedrock\_rag) | ./modules/bedrock-rag | n/a |
 | <a name="module_networking"></a> [networking](#module\_networking) | ./modules/networking-components | n/a |
 
 ## Resources
@@ -50,6 +52,7 @@ The diagram below illustrates the networking components provisioned by the infra
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_profile"></a> [aws\_profile](#input\_aws\_profile) | AWS CLI profile to use | `string` | `null` | no |
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS region to deploy resources | `string` | `null` | no |
+| <a name="input_ci_principal_arn"></a> [ci\_principal\_arn](#input\_ci\_principal\_arn) | ARNs of the CI/CD principal (users or role) that need to create the OpenSearch index | `string` | n/a | yes |
 | <a name="input_cost_center"></a> [cost\_center](#input\_cost\_center) | The cost center associated with the resources. | `string` | `null` | no |
 | <a name="input_created_by"></a> [created\_by](#input\_created\_by) | The arn of the IAM user or role that create the resources | `string` | n/a | yes |
 | <a name="input_environment"></a> [environment](#input\_environment) | The environment for the resources (e.g., dev, staging, prod). | `string` | n/a | yes |
@@ -63,5 +66,9 @@ The diagram below illustrates the networking components provisioned by the infra
 | <a name="output_nat_gateway_ids"></a> [nat\_gateway\_ids](#output\_nat\_gateway\_ids) | The IDs of the NAT Gateways |
 | <a name="output_private_subnet_ids"></a> [private\_subnet\_ids](#output\_private\_subnet\_ids) | The IDs of the private subnets |
 | <a name="output_public_subnet_ids"></a> [public\_subnet\_ids](#output\_public\_subnet\_ids) | The IDs of the public subnets |
+| <a name="output_rag_bedrock_role_arn"></a> [rag\_bedrock\_role\_arn](#output\_rag\_bedrock\_role\_arn) | ARN of the IAM role for Bedrock RAG |
+| <a name="output_rag_knowledge_base_id"></a> [rag\_knowledge\_base\_id](#output\_rag\_knowledge\_base\_id) | ID of the Bedrock Knowledge Base |
+| <a name="output_rag_opensearch_collection_arn"></a> [rag\_opensearch\_collection\_arn](#output\_rag\_opensearch\_collection\_arn) | ID of the OpenSearch Serverless collection for RAG |
+| <a name="output_rag_s3_documents_bucket_arn"></a> [rag\_s3\_documents\_bucket\_arn](#output\_rag\_s3\_documents\_bucket\_arn) | Name of the S3 bucket storing RAG documents |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | The ID of the VPC |
 <!-- END_TF_DOCS -->

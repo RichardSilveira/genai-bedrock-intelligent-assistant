@@ -1,3 +1,6 @@
+# --------------------------------------------------
+# VPC outputs
+# --------------------------------------------------
 output "vpc_id" {
   description = "The ID of the VPC"
   value       = module.networking.vpc_id
@@ -16,4 +19,27 @@ output "private_subnet_ids" {
 output "nat_gateway_ids" {
   description = "The IDs of the NAT Gateways"
   value       = module.networking.nat_gateway_ids
+}
+
+# --------------------------------------------------
+# Bedrock RAG outputs
+# --------------------------------------------------
+output "rag_s3_documents_bucket_arn" {
+  description = "Name of the S3 bucket storing RAG documents"
+  value       = module.bedrock_rag.kb_documents_bucket_arn
+}
+
+output "rag_opensearch_collection_arn" {
+  description = "ID of the OpenSearch Serverless collection for RAG"
+  value       = module.bedrock_rag.kb_opensearch_collection_arn
+}
+
+output "rag_bedrock_role_arn" {
+  description = "ARN of the IAM role for Bedrock RAG"
+  value       = module.bedrock_rag.bedrock_role_arn
+}
+
+output "rag_knowledge_base_id" {
+  description = "ID of the Bedrock Knowledge Base"
+  value       = module.bedrock_rag.knowledge_base_id
 }
