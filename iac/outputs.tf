@@ -38,3 +38,8 @@ output "rag_bedrock_role_arn" {
   description = "ARN of the IAM role for Bedrock RAG"
   value       = module.bedrock_rag.bedrock_role_arn
 }
+
+output "rag_knowledge_base_id" {
+  description = "ID of the Bedrock Knowledge Base"
+  value       = module.bedrock_rag.knowledge_base_id
+}

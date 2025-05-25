@@ -12,3 +12,8 @@ output "bedrock_role_arn" {
   description = "ARN of the IAM role for Bedrock"
   value       = aws_iam_role.bedrock.arn
 }
+
+output "knowledge_base_id" {
+  description = "ID of the Bedrock Knowledge Base"
+  value       = aws_bedrockagent_knowledge_base.this.id
+}

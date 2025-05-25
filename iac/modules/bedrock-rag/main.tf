@@ -1,3 +1,11 @@
+data "aws_region" "current" {}
+
+locals {
+  aoss_collection_name = "${var.prefix}-kb-collection"
+  vector_index_name    = "bedrock-kb-index"
+  embedding_model_arn  = "arn:aws:bedrock:${data.aws_region.current.name}::foundation-model/amazon.titan-embed-text-v2:0"
+}
+
 # --------------------------------------------------
 # S3 Bucket for Knowledge Base Documents
 # --------------------------------------------------
@@ -9,15 +17,16 @@ resource "aws_s3_bucket" "kb_documents" {
     Name = "${var.prefix}-kb-documents"
   })
 
-  # checkov:skip=CKV2_AWS_62: "Event notifications are not required for this use case"
-  # checkov:skip=CKV_AWS_18: "Access logging is a nice-to-have improvement for production"
-  # checkov:skip=CKV_AWS_145: "KMS encryption is a nice-to-have improvement for production"
-  # checkov:skip=CKV_AWS_144: "Cross-region replication is a nice-to-have improvement for production"
+  # checkov:skip=CKV2_AWS_62: "Event notifications - TBD"
+  # checkov:skip=CKV_AWS_18: "Access logging - TBD
+  # checkov:skip=CKV_AWS_145: "KMS encryption - a must have for compliance and auditing, but not mandatory for security concerns"
+  # checkov:skip=CKV_AWS_144: "Cross-region Replication - a must have for fault-tolerant applications"
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "kb_documents" {
   bucket = aws_s3_bucket.kb_documents.id
 
+  # 💰 once a object is synced to kb underlying vector store, it won't be frequently accessed anymore
   rule {
     id     = "transition-to-standard-ia"
     status = "Enabled"
@@ -28,6 +37,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "kb_documents" {
     }
   }
 
+  # 💰 To not to pay for unused resource usage
   rule {
     id     = "abort-incomplete-multipart-upload"
     status = "Enabled"
@@ -52,12 +62,14 @@ resource "aws_s3_bucket_versioning" "kb_documents" {
   versioning_configuration {
     status = "Enabled"
   }
+  # todo: transition stale object versions to OneZone-IA storage class
 }
 
 # --------------------------------------------------
-# OpenSearch Serverless Collection and Policies
+# OpenSearch Serverless Collection
 # --------------------------------------------------
 
+# Security - Encryption policies
 resource "aws_opensearchserverless_security_policy" "encryption" {
   name = "${var.prefix}-kb-encryption"
   type = "encryption"
@@ -65,15 +77,14 @@ resource "aws_opensearchserverless_security_policy" "encryption" {
     Rules = [
       {
         ResourceType = "collection"
-        Resource     = ["collection/${var.prefix}-kb-collection"],
+        Resource     = ["collection/${local.aoss_collection_name}"]
       }
     ],
     AWSOwnedKey = true
   })
 }
 
-# Network policy to enable public access
-# NOTE: This will be updated to private access via VPC endpoint later
+# Security - Network policies
 resource "aws_opensearchserverless_security_policy" "network" {
   name = "${var.prefix}-kb-network"
   type = "network"
@@ -82,16 +93,55 @@ resource "aws_opensearchserverless_security_policy" "network" {
       Rules = [
         {
           ResourceType = "collection",
-          Resource     = ["collection/${var.prefix}-kb-collection"]
+          Resource     = ["collection/${local.aoss_collection_name}"]
         }
       ],
       AllowFromPublic = true
     }
   ])
+  # todo: use vpc endpoint (AWS private network backbone via Private Link to reduce latency and improve security)
+}
+
+# Security - Data Access policies
+resource "aws_opensearchserverless_access_policy" "data_access" {
+  name = "${var.prefix}-kb-access-policy"
+  type = "data"
+  policy = jsonencode([
+    {
+      Rules = [
+        {
+          ResourceType = "collection",
+          Resource     = ["collection/${local.aoss_collection_name}"],
+          Permission = [
+            "aoss:CreateCollectionItems",
+            "aoss:DeleteCollectionItems",
+            "aoss:UpdateCollectionItems",
+            "aoss:DescribeCollectionItems"
+          ]
+        },
+        {
+          ResourceType = "index",
+          Resource     = ["index/${local.aoss_collection_name}/*"],
+          Permission = [
+            "aoss:CreateIndex",
+            "aoss:DeleteIndex",
+            "aoss:UpdateIndex",
+            "aoss:DescribeIndex",
+            "aoss:ReadDocument",
+            "aoss:WriteDocument"
+          ]
+        }
+      ],
+      Principal = [var.ci_principal_arn, aws_iam_role.bedrock.arn]
+    }
+  ])
+
+  # 📝  both bedrock service iam role and ci/cd iam user or role must be able to manage opensearch indexes
+  #     e.g., create index via terraform and updating them via data pipelines
 }
 
 resource "aws_opensearchserverless_collection" "this" {
-  name = "${var.prefix}-kb-collection"
+  name = local.aoss_collection_name
   type = "VECTORSEARCH"
 
   tags = merge(local.combined_tags, {
@@ -100,35 +150,99 @@ resource "aws_opensearchserverless_collection" "this" {
 
   depends_on = [
     aws_opensearchserverless_security_policy.encryption,
-    aws_opensearchserverless_security_policy.network
+    aws_opensearchserverless_security_policy.network,
+    aws_opensearchserverless_access_policy.data_access
   ]
 }
+resource "null_resource" "create_opensearch_index" {
 
-resource "aws_opensearchserverless_access_policy" "this" {
-  name = "${var.prefix}-kb-access-policy"
-  type = "data"
-  policy = jsonencode([
-    {
-      Rules = [
-        {
-          ResourceType = "collection",
-          Resource     = ["collection/${aws_opensearchserverless_collection.this.name}"],
-          Permission = [
-            "aoss:CreateCollectionItems",
-            "aoss:DeleteCollectionItems",
-            "aoss:UpdateCollectionItems",
-            "aoss:DescribeCollectionItems"
-          ]
-        }
-      ],
-      Principal = [aws_iam_role.bedrock.arn]
-    }
-  ])
+  # 👉 awscurl must be installed in the ci
+
+  provisioner "local-exec" {
+    command = <<EOF
+    set -euo pipefail
+
+    LOG_FILE="/tmp/opensearch_index_creation.log"
+
+    echo "🕵 aws identity: $(aws sts get-caller-identity)"
+
+    # Wait for collection to be active
+    aws opensearchserverless batch-get-collection --names ${local.aoss_collection_name} --query "collectionDetails[0].status" --region=${data.aws_region.current.name} --output text | grep -q "ACTIVE" || sleep 60
+
+    ENDPOINT=$(aws opensearchserverless batch-get-collection --names ${local.aoss_collection_name} --query "collectionDetails[0].collectionEndpoint" --region=${data.aws_region.current.name} --output text)
+
+    echo "🕵 ENDPOINT: $ENDPOINT"
+
+    # Run awscurl and capture output and exit code
+    set -x
+    awscurl --service aoss \
+      --region ${data.aws_region.current.name} \
+      --access_key $AWS_ACCESS_KEY_ID \
+      --secret_key $AWS_SECRET_ACCESS_KEY \
+      -X PUT "$ENDPOINT/${local.vector_index_name}" \
+      -H "Content-Type: application/json" \
+      -d @${path.module}/index-mapping.json -v \
+      > $LOG_FILE 2>&1 || true
+    set +x
+
+    EXIT_CODE=$?
+
+    if [ $EXIT_CODE -eq 0 ]; then
+      echo "Index creation completed successfully."
+    else
+      echo "awscurl failed with exit code $EXIT_CODE. See $LOG_FILE for details."
+      exit $EXIT_CODE
+    fi
+EOF
+  }
+
+  depends_on = [aws_opensearchserverless_collection.this]
 }
 
 # --------------------------------------------------
-# IAM Role and Policy for Bedrock
+# Bedrock Knowledge Base
 # --------------------------------------------------
+
+# 🎗️ Some settings such as embeddings model dimension must be the same as defined in the vector store data source (see `index-mapping.json`)
+resource "aws_bedrockagent_knowledge_base" "this" {
+  name        = "${var.prefix}-kb"
+  description = "Knowledge base for RAG implementation"
+
+  knowledge_base_configuration {
+    type = "VECTOR"
+    vector_knowledge_base_configuration {
+      embedding_model_arn = local.embedding_model_arn
+
+      embedding_model_configuration {
+        bedrock_embedding_model_configuration {
+          dimensions          = 512 # 👉 1024 is the most common one. You need to experiment on your own different settings and compare the results
+          embedding_data_type = "FLOAT32"
+        }
+      }
+    }
+  }
+
+  storage_configuration {
+    type = "OPENSEARCH_SERVERLESS"
+    opensearch_serverless_configuration {
+      collection_arn    = aws_opensearchserverless_collection.this.arn
+      vector_index_name = local.vector_index_name
+      field_mapping {
+        vector_field   = "vector"
+        text_field     = "AMAZON_BEDROCK_TEXT_CHUNK"
+        metadata_field = "AMAZON_BEDROCK_METADATA"
+      }
+    }
+  }
+
+  role_arn = aws_iam_role.bedrock.arn
+
+  tags = merge(local.combined_tags, {
+    Name = "${var.prefix}-kb"
+  })
+
+  depends_on = [null_resource.create_opensearch_index]
+}
 
 resource "aws_iam_role" "bedrock" {
   name = "${var.prefix}-kb-bedrock-role"
@@ -175,6 +289,13 @@ resource "aws_iam_role_policy" "bedrock" {
           "aoss:APIAccessAll"
         ]
         Resource = [aws_opensearchserverless_collection.this.arn]
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "bedrock:*" # not ideal
+        ]
+        Resource = ["*"] # not ideal at all
       }
     ]
   })
