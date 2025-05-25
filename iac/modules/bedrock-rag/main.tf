@@ -207,6 +207,7 @@ EOF
 resource "aws_bedrockagent_knowledge_base" "this" {
   name        = "${var.prefix}-kb"
   description = "Knowledge base for RAG implementation"
+  role_arn    = aws_iam_role.bedrock.arn
 
   knowledge_base_configuration {
     type = "VECTOR"
@@ -217,6 +218,16 @@ resource "aws_bedrockagent_knowledge_base" "this" {
         bedrock_embedding_model_configuration {
           dimensions          = 512 # 👉 1024 is the most common one. You need to experiment on your own different settings and compare the results
           embedding_data_type = "FLOAT32"
+        }
+      }
+
+      supplemental_data_storage_configuration {
+        storage_location {
+          type = "S3"
+
+          s3_location {
+            uri = "s3://${aws_s3_bucket.kb_documents.bucket}"
+          }
         }
       }
     }
@@ -235,13 +246,29 @@ resource "aws_bedrockagent_knowledge_base" "this" {
     }
   }
 
-  role_arn = aws_iam_role.bedrock.arn
-
   tags = merge(local.combined_tags, {
     Name = "${var.prefix}-kb"
   })
 
   depends_on = [null_resource.create_opensearch_index]
+}
+
+resource "aws_bedrockagent_data_source" "bedrock" {
+  knowledge_base_id = aws_bedrockagent_knowledge_base.this.id
+  name              = "${var.prefix}-kb-ds"
+  description       = "Data source for ${var.prefix} knowledge base"
+
+  data_source_configuration {
+    type = "S3"
+    s3_configuration {
+      bucket_arn         = aws_s3_bucket.kb_documents.arn
+      inclusion_prefixes = ["documents/"]
+    }
+  }
+
+  data_deletion_policy = "DELETE" # delete the documents in case the Knowledge Base is deleted
+
+  # Do not define `vector_ingestion_configuration` block if you want to use the default chunking strategy and parser from AWS
 }
 
 resource "aws_iam_role" "bedrock" {
@@ -276,7 +303,11 @@ resource "aws_iam_role_policy" "bedrock" {
         Effect = "Allow"
         Action = [
           "s3:GetObject",
-          "s3:ListBucket"
+          "s3:ListBucket",
+          "s3:PutObject",
+          "s3:DeleteObject",
+          "s3:AbortMultipartUpload",
+          "s3:ListMultipartUploadParts"
         ]
         Resource = [
           aws_s3_bucket.kb_documents.arn,
@@ -293,9 +324,11 @@ resource "aws_iam_role_policy" "bedrock" {
       {
         Effect = "Allow"
         Action = [
-          "bedrock:*" # not ideal
+          "bedrock:InvokeModel"
         ]
-        Resource = ["*"] # not ideal at all
+        Resource = [
+          local.embedding_model_arn
+        ]
       }
     ]
   })
