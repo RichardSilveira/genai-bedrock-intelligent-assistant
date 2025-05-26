@@ -1,4 +1,5 @@
 locals {
+
   combined_tags = merge(
     var.tags,
     {
