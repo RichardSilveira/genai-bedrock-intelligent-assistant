@@ -43,3 +43,4 @@ output "rag_knowledge_base_id" {
   description = "ID of the Bedrock Knowledge Base"
   value       = module.bedrock_rag.knowledge_base_id
 }
+
