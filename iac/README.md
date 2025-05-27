@@ -25,6 +25,8 @@ The diagram below illustrates the networking components provisioned by the infra
 | Name | Version |
 |------|---------|
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~>5.0 |
+| <a name="requirement_awscc"></a> [awscc](#requirement\_awscc) | = 1.35.0 |
+| <a name="requirement_opensearch"></a> [opensearch](#requirement\_opensearch) | 2.2.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | ~> 0.6 |
 
 ## Providers
@@ -37,7 +39,7 @@ The diagram below illustrates the networking components provisioned by the infra
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_bedrock_rag"></a> [bedrock\_rag](#module\_bedrock\_rag) | ./modules/bedrock-rag | n/a |
+| <a name="module_bedrock"></a> [bedrock](#module\_bedrock) | ./modules/bedrock-components | n/a |
 | <a name="module_networking"></a> [networking](#module\_networking) | ./modules/networking-components | n/a |
 
 ## Resources
@@ -67,9 +69,5 @@ The diagram below illustrates the networking components provisioned by the infra
 | <a name="output_nat_gateway_ids"></a> [nat\_gateway\_ids](#output\_nat\_gateway\_ids) | The IDs of the NAT Gateways |
 | <a name="output_private_subnet_ids"></a> [private\_subnet\_ids](#output\_private\_subnet\_ids) | The IDs of the private subnets |
 | <a name="output_public_subnet_ids"></a> [public\_subnet\_ids](#output\_public\_subnet\_ids) | The IDs of the public subnets |
-| <a name="output_rag_bedrock_role_arn"></a> [rag\_bedrock\_role\_arn](#output\_rag\_bedrock\_role\_arn) | ARN of the IAM role for Bedrock RAG |
-| <a name="output_rag_knowledge_base_id"></a> [rag\_knowledge\_base\_id](#output\_rag\_knowledge\_base\_id) | ID of the Bedrock Knowledge Base |
-| <a name="output_rag_opensearch_collection_arn"></a> [rag\_opensearch\_collection\_arn](#output\_rag\_opensearch\_collection\_arn) | ID of the OpenSearch Serverless collection for RAG |
-| <a name="output_rag_s3_documents_bucket_arn"></a> [rag\_s3\_documents\_bucket\_arn](#output\_rag\_s3\_documents\_bucket\_arn) | Name of the S3 bucket storing RAG documents |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | The ID of the VPC |
 <!-- END_TF_DOCS -->

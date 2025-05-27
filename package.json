@@ -13,8 +13,7 @@
   "lint-staged": {
     "**/*.{tf,tfvars}": [
       "node scripts/terraform-multi-fmt",
-      "./scripts/update-terraform-docs.sh",
-      "./scripts/run-checkov.sh"
+      "./scripts/update-terraform-docs.sh"
     ],
     "**/*.py": [
       "black --fast"

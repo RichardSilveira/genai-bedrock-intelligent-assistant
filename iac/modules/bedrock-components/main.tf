@@ -6,61 +6,6 @@ resource "random_string" "solution_prefix" {
 
 # – Bedrock Agent –
 
-locals {
-  # bedrock_agent_alias = var.create_agent_alias && var.use_aws_provider_alias ? aws_bedrockagent_agent_alias.bedrock_agent_alias : awscc_bedrock_agent_alias.bedrock_agent_alias
-
-  counter_kb        = local.create_kb || var.existing_kb != null ? [1] : []
-  knowledge_base_id = local.create_kb ? (var.create_default_kb ? awscc_bedrock_knowledge_base.knowledge_base_default[0].id : (var.create_mongo_config ? awscc_bedrock_knowledge_base.knowledge_base_mongo[0].id : (var.create_opensearch_config ? awscc_bedrock_knowledge_base.knowledge_base_opensearch[0].id : (var.create_pinecone_config ? awscc_bedrock_knowledge_base.knowledge_base_pinecone[0].id : (var.create_rds_config ? awscc_bedrock_knowledge_base.knowledge_base_rds[0].id : null))))) : null
-  knowledge_bases_value = {
-    description          = var.kb_description
-    knowledge_base_id    = local.create_kb ? local.knowledge_base_id : var.existing_kb
-    knowledge_base_state = var.kb_state
-  }
-  kb_result = [for count in local.counter_kb : local.knowledge_bases_value]
-
-
-  # counter_action_group = var.create_ag ? [1] : []
-  # action_group_value = {
-  #   action_group_name                    = var.action_group_name
-  #   description                          = var.action_group_description
-  #   action_group_state                   = var.action_group_state
-  #   parent_action_group_signature        = var.parent_action_group_signature
-  #   skip_resource_in_use_check_on_delete = var.skip_resource_in_use
-  #   api_schema = {
-  #     payload = var.api_schema_payload
-  #     s3 = {
-  #       s3_bucket_name = var.api_schema_s3_bucket_name
-  #       s3_object_key  = var.api_schema_s3_object_key
-  #     }
-  #   }
-  #   action_group_executor = {
-  #     custom_control = var.custom_control
-  #     lambda         = var.lambda_action_group_executor
-  #   }
-  # }
-  # action_group_result = [for count in local.counter_action_group : local.action_group_value]
-
-  # Create a map with action_group_name as keys for stable sorting
-  # action_group_map = var.action_group_list != null ? {
-  #   for idx, ag in var.action_group_list :
-  #   # Use action_group_name as key, or index if name is null
-  #   coalesce(try(ag.action_group_name, ""), format("%04d", idx)) => ag
-  # } : {}
-
-  # Extract values from the sorted map (Terraform maps are sorted by keys)
-  # sorted_action_groups = [for k, v in local.action_group_map : v]
-
-  # Combine action groups with consistent ordering
-  # action_group_list = concat(local.action_group_result, local.sorted_action_groups)
-
-  # counter_collaborator = var.create_agent && var.create_agent_alias && var.create_collaborator ? 1 : 0
-
-  # supervisor_guardrail = var.create_supervisor_guardrail == false || local.counter_collaborator == 0 ? null : [{
-  #   guardrail_identifier = var.supervisor_guardrail_id
-  #   guardrail_version    = var.supervisor_guardrail_version
-  # }]
-}
-
 # Add a sleep after creating the inference profile to ensure it's fully available
 # resource "time_sleep" "wait_for_inference_profile" {
 #   count           = var.create_app_inference_profile ? 1 : 0
