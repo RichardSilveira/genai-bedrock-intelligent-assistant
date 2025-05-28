@@ -1,7 +1,7 @@
 # - Knowledge Base Default OpenSearch -
 resource "awscc_bedrock_knowledge_base" "knowledge_base_default" {
   count       = var.create_default_kb ? 1 : 0
-  name        = "${random_string.solution_prefix.result}-${var.kb_name}"
+  name        = "${var.resource_prefix}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
   tags        = var.kb_tags
@@ -48,7 +48,7 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_default" {
 # - Mongo –
 resource "awscc_bedrock_knowledge_base" "knowledge_base_mongo" {
   count       = var.create_mongo_config ? 1 : 0
-  name        = "${random_string.solution_prefix.result}-${var.kb_name}"
+  name        = "${var.resource_prefix}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
   tags        = var.kb_tags
@@ -98,7 +98,7 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_mongo" {
 # – OpenSearch Serverless –
 resource "awscc_bedrock_knowledge_base" "knowledge_base_opensearch" {
   count       = var.create_opensearch_config ? 1 : 0
-  name        = "${random_string.solution_prefix.result}-${var.kb_name}"
+  name        = "${var.resource_prefix}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
   tags        = var.kb_tags
@@ -142,7 +142,7 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_opensearch" {
 # – Neptune Analytics –
 resource "awscc_bedrock_knowledge_base" "knowledge_base_neptune_analytics" {
   count       = var.create_neptune_analytics_config ? 1 : 0
-  name        = "${random_string.solution_prefix.result}-${var.kb_name}"
+  name        = "${var.resource_prefix}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
   tags        = var.kb_tags
@@ -184,7 +184,7 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_neptune_analytics" {
 # – Pinecone –
 resource "awscc_bedrock_knowledge_base" "knowledge_base_pinecone" {
   count       = var.create_pinecone_config ? 1 : 0
-  name        = "${random_string.solution_prefix.result}-${var.kb_name}"
+  name        = "${var.resource_prefix}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
   tags        = var.kb_tags
@@ -228,7 +228,7 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_pinecone" {
 # – RDS –
 resource "awscc_bedrock_knowledge_base" "knowledge_base_rds" {
   count       = var.create_rds_config ? 1 : 0
-  name        = "${random_string.solution_prefix.result}-${var.kb_name}"
+  name        = "${var.resource_prefix}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
   tags        = var.kb_tags
@@ -277,7 +277,7 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_rds" {
 
 # resource "awscc_bedrock_knowledge_base" "knowledge_base_kendra" {
 #   count       = var.create_kendra_config ? 1 : 0
-#   name        = "${random_string.solution_prefix.result}-${var.kb_name}"
+#   name        = "${var.resource_prefix}-${var.kb_name}"
 #   description = var.kb_description
 #   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
 #   tags        = var.kb_tags
@@ -296,7 +296,7 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_rds" {
 
 resource "awscc_bedrock_knowledge_base" "knowledge_base_sql" {
   count       = var.create_sql_config ? 1 : 0
-  name        = "${random_string.solution_prefix.result}-${var.kb_name}"
+  name        = "${var.resource_prefix}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
   tags        = var.kb_tags

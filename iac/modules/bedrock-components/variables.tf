@@ -1,3 +1,21 @@
+# --------------------------------------------------
+# Custom
+# --------------------------------------------------
+variable "resource_prefix" {
+  description = "Prefix for resource names"
+  type        = string
+}
+
+variable "enable_model_invocation_logging" {
+  description = "Enable Bedrock Model Invocation Logging"
+  type        = bool
+  default     = false
+}
+
+# --------------------------------------------------
+# AWS AI Modules
+# --------------------------------------------------
+# 🐛 In fact, this is assumed as prefix for a few resources only, eg. `custom_model_role`
 variable "name_prefix" {
   description = "This value is appended at the beginning of resource names."
   type        = string

@@ -15,7 +15,7 @@ resource "random_string" "solution_prefix" {
 
 # resource "awscc_bedrock_agent" "bedrock_agent" {
 #   count                       = var.create_agent ? 1 : 0
-#   agent_name                  = "${random_string.solution_prefix.result}-${var.agent_name}"
+#   agent_name                  = "${var.resource_prefix}-${var.agent_name}"
 #   foundation_model            = var.create_app_inference_profile ? awscc_bedrock_application_inference_profile.application_inference_profile[0].inference_profile_arn : var.foundation_model
 #   instruction                 = var.instruction
 #   description                 = var.agent_description
@@ -92,7 +92,7 @@ resource "random_string" "solution_prefix" {
 #   count                      = local.counter_collaborator
 #   agent_id                   = var.create_supervisor ? aws_bedrockagent_agent.agent_supervisor[0].agent_id : var.supervisor_id
 #   collaboration_instruction  = var.collaboration_instruction
-#   collaborator_name          = "${random_string.solution_prefix.result}-${var.collaborator_name}"
+#   collaborator_name          = "${var.resource_prefix}-${var.collaborator_name}"
 #   relay_conversation_history = "TO_COLLABORATOR"
 
 #   agent_descriptor {
@@ -104,7 +104,7 @@ resource "random_string" "solution_prefix" {
 
 # resource "aws_bedrockagent_agent" "agent_supervisor" {
 #   count                   = var.create_supervisor ? 1 : 0
-#   agent_name              = "${random_string.solution_prefix.result}-${var.supervisor_name}"
+#   agent_name              = "${var.resource_prefix}-${var.supervisor_name}"
 #   agent_resource_role_arn = var.agent_resource_role_arn != null ? var.agent_resource_role_arn : aws_iam_role.agent_role[0].arn
 
 #   agent_collaboration         = var.agent_collaboration
@@ -123,7 +123,7 @@ resource "random_string" "solution_prefix" {
 
 # resource "awscc_bedrock_guardrail" "guardrail" {
 #   count                     = var.create_guardrail ? 1 : 0
-#   name                      = "${random_string.solution_prefix.result}-${var.guardrail_name}"
+#   name                      = "${var.resource_prefix}-${var.guardrail_name}"
 #   blocked_input_messaging   = var.blocked_input_messaging
 #   blocked_outputs_messaging = var.blocked_outputs_messaging
 #   description               = var.guardrail_description
@@ -176,8 +176,8 @@ resource "random_string" "solution_prefix" {
 
 # resource "aws_bedrock_custom_model" "custom_model" {
 #   count                   = var.create_custom_model ? 1 : 0
-#   custom_model_name       = "${random_string.solution_prefix.result}-${var.custom_model_name}"
-#   job_name                = "${random_string.solution_prefix.result}-${var.custom_model_job_name}"
+#   custom_model_name       = "${var.resource_prefix}-${var.custom_model_name}"
+#   job_name                = "${var.resource_prefix}-${var.custom_model_job_name}"
 #   base_model_identifier   = data.aws_bedrock_foundation_model.model_identifier[0].model_arn
 #   role_arn                = aws_iam_role.custom_model_role[0].arn
 #   custom_model_kms_key_id = var.custom_model_kms_key_id
@@ -194,7 +194,7 @@ resource "random_string" "solution_prefix" {
 
 # resource "awscc_s3_bucket" "custom_model_output" {
 #   count       = var.custom_model_output_uri == null && var.create_custom_model == true ? 1 : 0
-#   bucket_name = "${random_string.solution_prefix.result}-${var.custom_model_name}-output-bucket"
+#   bucket_name = "${var.resource_prefix}-${var.custom_model_name}-output-bucket"
 #   public_access_block_configuration = {
 #     block_public_acls       = true
 #     block_public_policy     = true
@@ -212,6 +212,6 @@ resource "random_string" "solution_prefix" {
 #   }
 #   tags = var.custom_model_tags != null ? [for k, v in var.custom_model_tags : { key = k, value = v }] : [{
 #     key   = "Name"
-#     value = "${random_string.solution_prefix.result}-${var.custom_model_name}-output-bucket"
+#     value = "${var.resource_prefix}-${var.custom_model_name}-output-bucket"
 #   }]
 # }

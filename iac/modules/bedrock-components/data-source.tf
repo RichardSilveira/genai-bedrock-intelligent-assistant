@@ -1,7 +1,7 @@
 # - Knowledge Base S3 Data Source –
 resource "awscc_s3_bucket" "s3_data_source" {
   count       = (var.create_s3_data_source || var.create_kendra_s3_data_source) && var.use_existing_s3_data_source == false ? 1 : 0
-  bucket_name = "${random_string.solution_prefix.result}-${var.kb_name}-default-bucket"
+  bucket_name = "${var.resource_prefix}-${var.kb_name}-default-bucket"
 
   public_access_block_configuration = {
     block_public_acls       = true
@@ -29,7 +29,7 @@ resource "awscc_s3_bucket" "s3_data_source" {
 resource "awscc_bedrock_data_source" "knowledge_base_ds" {
   count                = var.create_s3_data_source ? 1 : 0
   knowledge_base_id    = var.create_default_kb ? awscc_bedrock_knowledge_base.knowledge_base_default[0].id : var.existing_kb
-  name                 = "${random_string.solution_prefix.result}-${var.kb_name}DataSource"
+  name                 = "${var.resource_prefix}-${var.kb_name}DataSource"
   data_deletion_policy = var.data_deletion_policy
   data_source_configuration = {
     type = "S3"
@@ -52,19 +52,19 @@ resource "aws_cloudwatch_log_group" "knowledge_base_cwl" {
 
 resource "awscc_logs_delivery_source" "knowledge_base_log_source" {
   count        = local.create_delivery ? 1 : 0
-  name         = "${random_string.solution_prefix.result}-${var.kb_name}-delivery-source"
+  name         = "${var.resource_prefix}-${var.kb_name}-delivery-source"
   log_type     = "APPLICATION_LOGS"
   resource_arn = awscc_bedrock_knowledge_base.knowledge_base_default[0].knowledge_base_arn
 }
 
 resource "awscc_logs_delivery_destination" "knowledge_base_log_destination" {
   count                    = local.create_delivery ? 1 : 0
-  name                     = "${random_string.solution_prefix.result}-${var.kb_name}-delivery-destination"
+  name                     = "${var.resource_prefix}-${var.kb_name}-delivery-destination"
   output_format            = "json"
   destination_resource_arn = local.create_cwl ? aws_cloudwatch_log_group.knowledge_base_cwl[0].arn : var.kb_monitoring_arn
   tags = var.kb_tags != null ? [for k, v in var.kb_tags : { key = k, value = v }] : [{
     key   = "Name"
-    value = "${random_string.solution_prefix.result}-${var.kb_name}-delivery-destination"
+    value = "${var.resource_prefix}-${var.kb_name}-delivery-destination"
   }]
 }
 
@@ -74,7 +74,7 @@ resource "awscc_logs_delivery" "knowledge_base_log_delivery" {
   delivery_source_name     = awscc_logs_delivery_source.knowledge_base_log_source[0].name
   tags = var.kb_tags != null ? [for k, v in var.kb_tags : { key = k, value = v }] : [{
     key   = "Name"
-    value = "${random_string.solution_prefix.result}-${var.kb_name}-delivery"
+    value = "${var.resource_prefix}-${var.kb_name}-delivery"
   }]
 }
 
@@ -82,7 +82,7 @@ resource "awscc_logs_delivery" "knowledge_base_log_delivery" {
 resource "awscc_bedrock_data_source" "knowledge_base_web_crawler" {
   count             = var.create_web_crawler ? 1 : 0
   knowledge_base_id = var.create_default_kb ? awscc_bedrock_knowledge_base.knowledge_base_default[0].id : var.existing_kb
-  name              = "${random_string.solution_prefix.result}-${var.kb_name}DataSourceWebCrawler"
+  name              = "${var.resource_prefix}-${var.kb_name}DataSourceWebCrawler"
   data_source_configuration = {
     type = "WEB"
     web_configuration = {
@@ -108,7 +108,7 @@ resource "awscc_bedrock_data_source" "knowledge_base_web_crawler" {
 resource "awscc_bedrock_data_source" "knowledge_base_confluence" {
   count             = var.create_confluence ? 1 : 0
   knowledge_base_id = var.create_default_kb ? awscc_bedrock_knowledge_base.knowledge_base_default[0].id : var.existing_kb
-  name              = "${random_string.solution_prefix.result}-${var.kb_name}DataSourceConfluence"
+  name              = "${var.resource_prefix}-${var.kb_name}DataSourceConfluence"
   data_source_configuration = {
     type = "CONFLUENCE"
     confluence_configuration = {
@@ -135,7 +135,7 @@ resource "awscc_bedrock_data_source" "knowledge_base_confluence" {
 resource "awscc_bedrock_data_source" "knowledge_base_sharepoint" {
   count             = var.create_sharepoint ? 1 : 0
   knowledge_base_id = var.create_default_kb ? awscc_bedrock_knowledge_base.knowledge_base_default[0].id : var.existing_kb
-  name              = "${random_string.solution_prefix.result}-${var.kb_name}DataSourceSharepoint"
+  name              = "${var.resource_prefix}-${var.kb_name}DataSourceSharepoint"
   data_source_configuration = {
     type = "SHAREPOINT"
     share_point_configuration = {
@@ -164,7 +164,7 @@ resource "awscc_bedrock_data_source" "knowledge_base_sharepoint" {
 resource "awscc_bedrock_data_source" "knowledge_base_salesforce" {
   count             = var.create_salesforce ? 1 : 0
   knowledge_base_id = var.create_default_kb ? awscc_bedrock_knowledge_base.knowledge_base_default[0].id : var.existing_kb
-  name              = "${random_string.solution_prefix.result}-${var.kb_name}DataSourceSalesforce"
+  name              = "${var.resource_prefix}-${var.kb_name}DataSourceSalesforce"
   data_source_configuration = {
     type = "SALESFORCE"
     salesforce_configuration = {

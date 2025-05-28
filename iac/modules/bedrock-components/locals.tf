@@ -1,6 +1,16 @@
 locals {
 
   # --------------------------------------------------
+  # Custom
+  # --------------------------------------------------
+  combined_tags = merge(
+    var.tags,
+    {
+      Component = "bedrock-rag"
+    }
+  )
+
+  # --------------------------------------------------
   # Data Source
   # --------------------------------------------------
   create_cwl      = var.create_default_kb && var.create_kb_log_group

@@ -33,7 +33,7 @@
 # Define the IAM role for Amazon Bedrock Knowledge Base
 resource "aws_iam_role" "bedrock_knowledge_base_role" {
   count = var.kb_role_arn != null || (local.create_kb == false && var.create_sql_config == false) ? 0 : 1
-  name  = "AmazonBedrockExecutionRoleForKnowledgeBase-${random_string.solution_prefix.result}"
+  name  = "AmazonBedrockExecutionRoleForKnowledgeBase-${var.resource_prefix}"
 
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
@@ -53,7 +53,7 @@ resource "aws_iam_role" "bedrock_knowledge_base_role" {
 # Attach a policy to allow necessary permissions for the Bedrock Knowledge Base
 resource "aws_iam_policy" "bedrock_knowledge_base_policy" {
   count = var.kb_role_arn != null || var.create_default_kb == false || var.create_kendra_config == true ? 0 : 1
-  name  = "AmazonBedrockKnowledgeBasePolicy-${random_string.solution_prefix.result}"
+  name  = "AmazonBedrockKnowledgeBasePolicy-${var.resource_prefix}"
 
   policy = jsonencode({
     "Version" : "2012-10-17",
@@ -86,7 +86,7 @@ resource "aws_iam_policy" "bedrock_knowledge_base_policy" {
 
 resource "aws_iam_policy" "bedrock_knowledge_base_policy_s3" {
   count = var.kb_role_arn != null || local.create_kb == false || var.create_s3_data_source == false ? 0 : 1
-  name  = "AmazonBedrockKnowledgeBasePolicyS3DataSource-${random_string.solution_prefix.result}"
+  name  = "AmazonBedrockKnowledgeBasePolicyS3DataSource-${var.resource_prefix}"
 
   policy = jsonencode({
     "Version" : "2012-10-17",
@@ -111,7 +111,7 @@ resource "aws_iam_policy" "bedrock_knowledge_base_policy_s3" {
 
 resource "aws_iam_policy" "bedrock_kb_s3_decryption_policy" {
   count = local.create_kb_role && var.kb_s3_data_source_kms_arn != null && var.create_s3_data_source ? 1 : 0
-  name  = "AmazonBedrockS3KMSPolicyForKnowledgeBase_${random_string.solution_prefix.result}"
+  name  = "AmazonBedrockS3KMSPolicyForKnowledgeBase_${var.resource_prefix}"
 
   policy = jsonencode({
     "Version" : "2012-10-17",
@@ -256,7 +256,7 @@ resource "aws_iam_role_policy" "bedrock_kb_oss" {
 # Define the IAM role for Application Inference Profile
 # resource "aws_iam_role" "application_inference_profile_role" {
 #   count = var.create_app_inference_profile ? 1 : 0
-#   name  = "ApplicationInferenceProfile-${random_string.solution_prefix.result}"
+#   name  = "ApplicationInferenceProfile-${var.resource_prefix}"
 
 #   assume_role_policy = jsonencode({
 #     "Version" : "2012-10-17",
@@ -400,7 +400,7 @@ resource "aws_iam_role_policy" "bedrock_kb_oss" {
 
 # resource "awscc_iam_role" "kendra_index_role" {
 #   count       = var.create_kendra_config && var.kendra_index_arn == null ? 1 : 0
-#   role_name   = "kendra_index_role_${random_string.solution_prefix.result}"
+#   role_name   = "kendra_index_role_${var.resource_prefix}"
 #   description = "Role assigned to the Kendra index"
 #   assume_role_policy_document = jsonencode({
 #     Version = "2012-10-17"
