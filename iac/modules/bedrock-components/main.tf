@@ -1,9 +1,3 @@
-resource "random_string" "solution_prefix" {
-  length  = 4
-  special = false
-  upper   = false
-}
-
 # – Bedrock Agent –
 
 # Add a sleep after creating the inference profile to ensure it's fully available
