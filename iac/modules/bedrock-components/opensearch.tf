@@ -35,6 +35,7 @@ module "oss_knowledgebase" {
       }
       }
   EOF
+  collection_tags                    = var.collection_tags
 }
 
 resource "aws_opensearchserverless_access_policy" "updated_data_policy" {

@@ -796,6 +796,16 @@ variable "collection_name" {
   default     = null
 }
 
+# added manually as it was missing
+variable "collection_tags" {
+  description = "Tags to apply to the OpenSearch collection."
+  type = list(object({
+    key   = string
+    value = string
+  }))
+  default = []
+}
+
 variable "kb_role_arn" {
   description = "The ARN of the IAM role with permission to invoke API operations on the knowledge base."
   type        = string

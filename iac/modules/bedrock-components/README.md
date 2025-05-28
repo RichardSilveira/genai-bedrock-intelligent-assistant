@@ -22,6 +22,8 @@ No requirements.
 
 | Name | Type |
 |------|------|
+| [aws_bedrock_model_invocation_logging_configuration.bedrock_model_invocation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/bedrock_model_invocation_logging_configuration) | resource |
+| [aws_cloudwatch_log_group.bedrock_model_invocation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_cloudwatch_log_group.knowledge_base_cwl](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_iam_policy.bedrock_kb_s3_decryption_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_policy.bedrock_kb_sql](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
@@ -30,7 +32,9 @@ No requirements.
 | [aws_iam_policy.bedrock_knowledge_base_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_policy.bedrock_knowledge_base_policy_s3](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_role.bedrock_knowledge_base_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_iam_role.bedrock_model_invocation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy.bedrock_kb_oss](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.bedrock_model_invocation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy_attachment.bedrock_kb_s3_decryption_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.bedrock_knowledge_base_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.bedrock_knowledge_base_policy_s3_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
@@ -173,6 +177,7 @@ No requirements.
 | <a name="input_document_metadata_configurations"></a> [document\_metadata\_configurations](#input\_document\_metadata\_configurations) | List of document metadata configurations for Kendra. | <pre>list(object({<br/>    name = optional(string)<br/>    type = optional(string)<br/>    search = optional(object({<br/>      facetable   = optional(bool)<br/>      searchable  = optional(bool)<br/>      displayable = optional(bool)<br/>      sortable    = optional(bool)<br/>    }))<br/>    relevance = optional(object({<br/>      duration   = optional(string)<br/>      freshness  = optional(bool)<br/>      importance = optional(number)<br/>      rank_order = optional(string)<br/>      value_importance_items = optional(list(object({<br/>        key   = optional(string)<br/>        value = optional(number)<br/>      })))<br/>    }))<br/>  }))</pre> | `null` | no |
 | <a name="input_embedding_data_type"></a> [embedding\_data\_type](#input\_embedding\_data\_type) | The data type for the vectors when using a model to convert text into vector embeddings. | `string` | `null` | no |
 | <a name="input_embedding_model_dimensions"></a> [embedding\_model\_dimensions](#input\_embedding\_model\_dimensions) | The dimensions details for the vector configuration used on the Bedrock embeddings model. | `number` | `null` | no |
+| <a name="input_enable_model_invocation_logging"></a> [enable\_model\_invocation\_logging](#input\_enable\_model\_invocation\_logging) | Enable Bedrock Model Invocation Logging | `bool` | `false` | no |
 | <a name="input_endpoint"></a> [endpoint](#input\_endpoint) | Database endpoint | `string` | `null` | no |
 | <a name="input_endpoint_service_name"></a> [endpoint\_service\_name](#input\_endpoint\_service\_name) | MongoDB Atlas endpoint service name. | `string` | `null` | no |
 | <a name="input_exclusion_filters"></a> [exclusion\_filters](#input\_exclusion\_filters) | A set of regular expression filter patterns for a type of object. | `list(string)` | `[]` | no |
@@ -260,6 +265,7 @@ No requirements.
 | <a name="input_redshift_storage_configuration"></a> [redshift\_storage\_configuration](#input\_redshift\_storage\_configuration) | List of configurations for available Redshift query engine storage types. | <pre>list(object({<br/>    aws_data_catalog_configuration = optional(object({<br/>      table_names = optional(list(string))<br/>    }))<br/>    redshift_configuration = optional(object({<br/>      database_name = optional(string)<br/>    }))<br/>    type = optional(string)<br/>  }))</pre> | `null` | no |
 | <a name="input_regexes_config"></a> [regexes\_config](#input\_regexes\_config) | List of regex. | `list(map(string))` | `null` | no |
 | <a name="input_resource_arn"></a> [resource\_arn](#input\_resource\_arn) | The ARN of the vector store. | `string` | `null` | no |
+| <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | Prefix for resource names | `string` | n/a | yes |
 | <a name="input_s3_data_source_bucket_name"></a> [s3\_data\_source\_bucket\_name](#input\_s3\_data\_source\_bucket\_name) | The name of the S3 bucket where the data source is stored. | `string` | `null` | no |
 | <a name="input_s3_data_source_document_metadata_prefix"></a> [s3\_data\_source\_document\_metadata\_prefix](#input\_s3\_data\_source\_document\_metadata\_prefix) | The prefix for the S3 data source. | `string` | `null` | no |
 | <a name="input_s3_data_source_exclusion_patterns"></a> [s3\_data\_source\_exclusion\_patterns](#input\_s3\_data\_source\_exclusion\_patterns) | A list of glob patterns to exclude from the data source. | `list(string)` | `null` | no |
