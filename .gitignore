@@ -18,6 +18,7 @@ iac/terraform.local.plan
 
 # Misc
 .DS_Store
+todos.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

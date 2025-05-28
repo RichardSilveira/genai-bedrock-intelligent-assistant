@@ -35,8 +35,3 @@ variable "aws_profile" {
   type        = string
   default     = null
 }
-
-variable "ci_principal_arn" {
-  description = "ARNs of the CI/CD principal (users or role) that need to create the OpenSearch index"
-  type        = string
-}
