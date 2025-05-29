@@ -14,12 +14,6 @@ variable "vpc_enable_dns_hostnames" {
   default     = true
 }
 
-variable "vpc_flowlog_retention_in_days" {
-  description = "Number of days to retain CloudWatch logs for VPC flow logs."
-  type        = number
-  default     = 30
-}
-
 variable "public_subnet_1_cidr" {
   description = "CIDR block for the first public subnet (e.g., 10.0.1.0/24)."
   type        = string

@@ -96,14 +96,14 @@ resource "aws_iam_policy" "bedrock_knowledge_base_policy_s3" {
         "Action" : [
           "s3:ListBucket",
         ],
-        "Resource" : var.kb_s3_data_source == null ? awscc_s3_bucket.s3_data_source[0].arn : var.kb_s3_data_source
+        "Resource" : var.kb_s3_data_source == null ? module.kb_data_source_bucket[0].bucket_arn : var.kb_s3_data_source
       },
       {
         "Effect" : "Allow",
         "Action" : [
           "s3:GetObject",
         ],
-        "Resource" : var.kb_s3_data_source == null ? "${awscc_s3_bucket.s3_data_source[0].arn}/*" : "${var.kb_s3_data_source}/*"
+        "Resource" : var.kb_s3_data_source == null ? "${module.kb_data_source_bucket[0].bucket_arn}/*" : "${var.kb_s3_data_source}/*"
       }
     ]
   })

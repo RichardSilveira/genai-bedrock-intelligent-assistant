@@ -41,6 +41,7 @@ The diagram below illustrates the networking components provisioned by the infra
 |------|--------|---------|
 | <a name="module_bedrock"></a> [bedrock](#module\_bedrock) | ./modules/bedrock-components | n/a |
 | <a name="module_networking"></a> [networking](#module\_networking) | ./modules/networking-components | n/a |
+| <a name="module_observability"></a> [observability](#module\_observability) | ./modules/observability-components | n/a |
 
 ## Resources
 

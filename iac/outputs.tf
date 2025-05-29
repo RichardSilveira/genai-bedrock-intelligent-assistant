@@ -22,6 +22,19 @@ output "nat_gateway_ids" {
 }
 
 # --------------------------------------------------
+# Observability outputs
+# --------------------------------------------------
+# output "config_bucket_id" {
+#   description = "The ID of the S3 bucket storing AWS Config data"
+#   value       = module.observability.config_bucket_id
+# }
+
+# output "config_sns_topic_arn" {
+#   description = "The ARN of the SNS topic for AWS Config alerts"
+#   value       = module.observability.config_sns_topic_arn
+# }
+
+# --------------------------------------------------
 # Bedrock RAG outputs
 # --------------------------------------------------
 # output "rag_s3_documents_bucket_arn" {
