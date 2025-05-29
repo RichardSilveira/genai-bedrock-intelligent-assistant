@@ -40,6 +40,18 @@ variable "public_subnet_2_az" {
   type        = string
 }
 
+variable "public_subnet_3_cidr" {
+  description = "CIDR block for the third public subnet (e.g., 10.0.3.0/24)."
+  type        = string
+  default     = null
+}
+
+variable "public_subnet_3_az" {
+  description = "Availability zone for the third public subnet (e.g., us-east-1c)."
+  type        = string
+  default     = null
+}
+
 variable "private_subnet_1_cidr" {
   description = "CIDR block for the first private subnet (e.g., 10.0.11.0/24)."
   type        = string
@@ -58,6 +70,24 @@ variable "private_subnet_2_cidr" {
 variable "private_subnet_2_az" {
   description = "Availability zone for the second private subnet (e.g., us-east-1b)."
   type        = string
+}
+
+variable "private_subnet_3_cidr" {
+  description = "CIDR block for the third private subnet (e.g., 10.0.13.0/24)."
+  type        = string
+  default     = null
+}
+
+variable "private_subnet_3_az" {
+  description = "Availability zone for the third private subnet (e.g., us-east-1c)."
+  type        = string
+  default     = null
+}
+
+variable "create_second_nat" {
+  description = "Whether to create a second NAT gateway."
+  type        = bool
+  default     = true
 }
 
 variable "tags" {
