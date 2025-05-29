@@ -9,6 +9,7 @@
 #    - Recording resources without rules still tracks configuration history
 #    - This allows for flexible implementation and cost optimization
 # 4. The Delivery Channel defines where findings and history are sent (S3, SNS)
+# --------------------------------------------------
 
 # S3 bucket for storing AWS Config data
 module "config_bucket" {
