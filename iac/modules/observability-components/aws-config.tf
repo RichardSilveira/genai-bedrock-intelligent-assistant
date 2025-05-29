@@ -98,14 +98,12 @@ resource "aws_iam_role" "config_role" {
   })
 }
 
-# Attaches AWS managed policy for Config service permissions
 resource "aws_iam_role_policy_attachment" "config_policy" {
   count      = var.create_aws_config ? 1 : 0
   role       = aws_iam_role.config_role[0].name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWS_ConfigRole"
 }
 
-# Custom policy allowing Config to write to S3
 resource "aws_iam_role_policy" "config_s3_policy" {
   count = var.create_aws_config ? 1 : 0
   name  = "${var.resource_prefix}-config-s3-policy"

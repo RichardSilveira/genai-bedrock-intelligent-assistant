@@ -2,7 +2,6 @@
 # Bedrock Model Invocation Logging with CloudWatch
 # --------------------------------------------------
 
-# CloudWatch log group for Bedrock model invocation logs
 resource "aws_cloudwatch_log_group" "bedrock_model_invocation" {
   count             = var.enable_bedrock_model_invocation_logging ? 1 : 0
   name              = "/aws/bedrock/${var.resource_prefix}-model-invocation"
@@ -13,7 +12,6 @@ resource "aws_cloudwatch_log_group" "bedrock_model_invocation" {
   })
 }
 
-# Configure Bedrock model invocation logging
 resource "aws_bedrock_model_invocation_logging_configuration" "this" {
   count = var.enable_bedrock_model_invocation_logging ? 1 : 0
 
@@ -34,7 +32,6 @@ resource "aws_bedrock_model_invocation_logging_configuration" "this" {
   ]
 }
 
-# IAM role for Bedrock logging
 resource "aws_iam_role" "bedrock_logging" {
   count = var.enable_bedrock_model_invocation_logging ? 1 : 0
   name  = "${var.resource_prefix}-bedrock-logging-role"
@@ -57,7 +54,6 @@ resource "aws_iam_role" "bedrock_logging" {
   })
 }
 
-# IAM policy for Bedrock logging
 resource "aws_iam_role_policy" "bedrock_logging" {
   count = var.enable_bedrock_model_invocation_logging ? 1 : 0
   name  = "${var.resource_prefix}-bedrock-logging-policy"

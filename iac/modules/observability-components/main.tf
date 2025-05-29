@@ -12,12 +12,3 @@
 # - VPC Flow Logs with Athena integration
 # - Security Hub
 # --------------------------------------------------
-
-# locals {
-#   combined_tags = merge(
-#     var.tags,
-#     {
-#       Component = "observability-components"
-#     }
-#   )
-# }
