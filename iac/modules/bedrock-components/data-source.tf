@@ -3,6 +3,7 @@ resource "awscc_s3_bucket" "s3_data_source" {
   count       = (var.create_s3_data_source || var.create_kendra_s3_data_source) && var.use_existing_s3_data_source == false ? 1 : 0
   bucket_name = "${var.resource_prefix}-${var.kb_name}-default-bucket"
 
+
   public_access_block_configuration = {
     block_public_acls       = true
     block_public_policy     = true
