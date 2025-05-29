@@ -49,6 +49,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "standard_lifecycle" {
       days          = 30
       storage_class = "INTELLIGENT_TIERING"
     }
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
   }
 }
 
@@ -77,6 +81,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "cost_optimized_lifecycle" {
     transition {
       days          = 7
       storage_class = "INTELLIGENT_TIERING"
+    }
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
     }
   }
 }

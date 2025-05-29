@@ -1,60 +1,11 @@
 # - Knowledge Base S3 Data Source –
-resource "awscc_s3_bucket" "s3_data_source" {
-  count       = (var.create_s3_data_source || var.create_kendra_s3_data_source) && var.use_existing_s3_data_source == false ? 1 : 0
-  bucket_name = "${var.resource_prefix}-${var.kb_name}-default-bucket"
-
-
-  public_access_block_configuration = {
-    block_public_acls       = true
-    block_public_policy     = true
-    ignore_public_acls      = true
-    restrict_public_buckets = true
-  }
-
-  bucket_encryption = {
-    server_side_encryption_configuration = [{
-      bucket_key_enabled = true
-      server_side_encryption_by_default = {
-        sse_algorithm     = var.kb_s3_data_source_kms_arn == null ? "AES256" : "aws:kms" # AES256 => S3-SSE
-        kms_master_key_id = var.kb_s3_data_source_kms_arn
-      }
-    }]
-  }
-
-  tags = var.kb_tags != null ? [for k, v in var.kb_tags : { key = k, value = v }] : [{
-    key   = "Name"
-    value = "S3 Data Source"
-  }]
-
-  # checkov:skip=CKV2_AWS_62: "Event notifications - TBD"
-  # checkov:skip=CKV_AWS_18: "Access logging - TBD
-  # checkov:skip=CKV_AWS_145: "KMS encryption - a must have for compliance and auditing, but not mandatory for security concerns"
-  # checkov:skip=CKV_AWS_144: "Cross-region Replication - a must have for fault-tolerant applications"
-}
-
-resource "aws_s3_bucket_lifecycle_configuration" "s3_data_source_lifecycle" {
-  bucket = awscc_s3_bucket.s3_data_source[0].id
-
-  # 💰 once a object is synced to kb underlying vector store, it won't be frequently accessed anymore
-  rule {
-    id     = "transition-to-standard-ia"
-    status = "Enabled"
-
-    transition {
-      days          = 30
-      storage_class = "STANDARD_IA"
-    }
-  }
-
-  # 💰 To not to pay for unused resource usage
-  rule {
-    id     = "abort-incomplete-multipart-upload"
-    status = "Enabled"
-
-    abort_incomplete_multipart_upload {
-      days_after_initiation = 7
-    }
-  }
+module "kb_data_source_bucket" {
+  source          = "../s3"
+  count           = (var.create_s3_data_source || var.create_kendra_s3_data_source) && var.use_existing_s3_data_source == false ? 1 : 0
+  resource_prefix = var.resource_prefix
+  name            = "${var.kb_name}-data-source"
+  lifecycle_mode  = "standard"
+  tags            = var.kb_tags != null ? var.kb_tags : { Name = "S3 Data Source" }
 }
 
 resource "awscc_bedrock_data_source" "knowledge_base_ds" {
@@ -65,7 +16,7 @@ resource "awscc_bedrock_data_source" "knowledge_base_ds" {
   data_source_configuration = {
     type = "S3"
     s3_configuration = {
-      bucket_arn              = var.kb_s3_data_source == null ? awscc_s3_bucket.s3_data_source[0].arn : var.kb_s3_data_source # Create an S3 bucket or reference existing
+      bucket_arn              = var.kb_s3_data_source == null ? module.kb_data_source_bucket[0].bucket_arn : var.kb_s3_data_source
       bucket_owner_account_id = var.bucket_owner_account_id
       inclusion_prefixes      = var.s3_inclusion_prefixes
     }

@@ -9,6 +9,12 @@ variable "create_aws_config" {
   default     = false
 }
 
+variable "enable_bedrock_model_invocation_logging" {
+  description = "Whether to enable Bedrock model invocation logging"
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   description = "Tags to apply to all resources"
   type        = map(string)

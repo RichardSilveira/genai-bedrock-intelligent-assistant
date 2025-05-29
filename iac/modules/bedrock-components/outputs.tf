@@ -49,12 +49,12 @@ output "cloudwatch_log_group" {
 # }
 
 output "s3_data_source_arn" {
-  value       = var.kb_s3_data_source != null ? var.kb_s3_data_source : var.create_default_kb ? length(awscc_s3_bucket.s3_data_source) > 0 ? awscc_s3_bucket.s3_data_source[0].arn : null : null
+  value       = var.kb_s3_data_source != null ? var.kb_s3_data_source : var.create_default_kb ? length(module.kb_data_source_bucket) > 0 ? module.kb_data_source_bucket[0].bucket_arn : null : null
   description = "The Amazon Bedrock Data Source for S3."
 }
 
 output "s3_data_source_name" {
-  value       = var.kb_s3_data_source != null ? split(":", var.kb_s3_data_source)[5] : var.create_default_kb ? length(awscc_s3_bucket.s3_data_source) > 0 ? awscc_s3_bucket.s3_data_source[0].id : null : null
+  value       = var.kb_s3_data_source != null ? split(":", var.kb_s3_data_source)[5] : var.create_default_kb ? length(module.kb_data_source_bucket) > 0 ? module.kb_data_source_bucket[0].bucket_id : null : null
   description = "The name of the Amazon Bedrock Data Source for S3."
 }
 
