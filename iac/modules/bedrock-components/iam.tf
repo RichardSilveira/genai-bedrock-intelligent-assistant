@@ -58,12 +58,19 @@ resource "aws_iam_policy" "bedrock_knowledge_base_policy" {
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
+      # {
+      #   "Effect" : "Allow",
+      #   "Action" : [
+      #     "aoss:APIAccessAll"
+      #   ],
+      #   "Resource" : module.oss_knowledgebase[0].opensearch_serverless_collection.arn
+      # },
       {
         "Effect" : "Allow",
         "Action" : [
-          "aoss:APIAccessAll"
+          "secretsmanager:GetSecretValue"
         ],
-        "Resource" : module.oss_knowledgebase[0].opensearch_serverless_collection.arn
+        "Resource" : var.credentials_secret_arn
       },
       {
         "Effect" : "Allow",

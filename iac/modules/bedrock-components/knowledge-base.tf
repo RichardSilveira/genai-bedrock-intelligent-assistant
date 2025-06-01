@@ -1,25 +1,26 @@
 # - Knowledge Base Default OpenSearch -
+# Using Pinecone as default
 resource "awscc_bedrock_knowledge_base" "knowledge_base_default" {
-  count       = var.create_default_kb ? 1 : 0
+  count       = var.create_pinecone_config ? 1 : 0
   name        = "${var.resource_prefix}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
   tags        = var.kb_tags
 
   storage_configuration = {
-    type = "OPENSEARCH_SERVERLESS"
-    opensearch_serverless_configuration = {
-      collection_arn    = module.oss_knowledgebase[0].opensearch_serverless_collection.arn
-      vector_index_name = module.oss_knowledgebase[0].vector_index.name
+    type = var.kb_storage_type
+    pinecone_configuration = {
+      connection_string      = var.connection_string
+      credentials_secret_arn = var.credentials_secret_arn
       field_mapping = {
         metadata_field = var.metadata_field
         text_field     = var.text_field
-        vector_field   = var.vector_field
       }
+      namespace = var.namespace
     }
   }
   knowledge_base_configuration = {
-    type = "VECTOR"
+    type = var.kb_type
     vector_knowledge_base_configuration = {
       embedding_model_arn = var.kb_embedding_model_arn
       embedding_model_configuration = var.embedding_model_dimensions != null ? {
@@ -40,8 +41,51 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_default" {
       } : null
     }
   }
-  depends_on = [time_sleep.wait_after_index_creation]
 }
+
+# resource "awscc_bedrock_knowledge_base" "knowledge_base_default" {
+#   count       = var.create_default_kb ? 1 : 0
+#   name        = "${var.resource_prefix}-${var.kb_name}"
+#   description = var.kb_description
+#   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
+#   tags        = var.kb_tags
+
+#   storage_configuration = {
+#     type = "OPENSEARCH_SERVERLESS"
+#     opensearch_serverless_configuration = {
+#       collection_arn    = module.oss_knowledgebase[0].opensearch_serverless_collection.arn
+#       vector_index_name = module.oss_knowledgebase[0].vector_index.name
+#       field_mapping = {
+#         metadata_field = var.metadata_field
+#         text_field     = var.text_field
+#         vector_field   = var.vector_field
+#       }
+#     }
+#   }
+#   knowledge_base_configuration = {
+#     type = "VECTOR"
+#     vector_knowledge_base_configuration = {
+#       embedding_model_arn = var.kb_embedding_model_arn
+#       embedding_model_configuration = var.embedding_model_dimensions != null ? {
+#         bedrock_embedding_model_configuration = {
+#           dimensions          = var.embedding_model_dimensions
+#           embedding_data_type = var.embedding_data_type
+#         }
+#       } : null
+#       supplemental_data_storage_configuration = var.create_supplemental_data_storage ? {
+#         supplemental_data_storage_locations = [
+#           {
+#             supplemental_data_storage_location_type = "S3"
+#             s3_location = {
+#               uri = var.supplemental_data_s3_uri
+#             }
+#           }
+#         ]
+#       } : null
+#     }
+#   }
+#   depends_on = [time_sleep.wait_after_index_creation]
+# }
 
 # – Existing Vector KBs –
 
@@ -183,7 +227,8 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_neptune_analytics" {
 
 # – Pinecone –
 resource "awscc_bedrock_knowledge_base" "knowledge_base_pinecone" {
-  count       = var.create_pinecone_config ? 1 : 0
+  # count       = var.create_pinecone_config ? 1 : 0
+  count       = 0
   name        = "${var.resource_prefix}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn

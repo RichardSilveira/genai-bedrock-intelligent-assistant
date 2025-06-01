@@ -10,10 +10,10 @@ terraform {
       version = "= 1.35.0"
     }
 
-    opensearch = {
-      source  = "opensearch-project/opensearch"
-      version = "2.2.0"
-    }
+    # opensearch = {
+    #   source  = "opensearch-project/opensearch"
+    #   version = "2.2.0"
+    # }
 
     time = {
       source  = "hashicorp/time"
@@ -42,8 +42,8 @@ provider "awscc" {
   profile = var.aws_profile
 }
 
-# You must create the collection endpoint before enable this provider 🤷‍♂️
-provider "opensearch" {
-  url         = module.bedrock.default_collection.collection_endpoint
-  healthcheck = false
-}
+# Enable it only when working with knowlede base using opensearch serverless as its data source
+# provider "opensearch" {
+#   url         = module.bedrock.default_collection.collection_endpoint
+#   healthcheck = false
+# }
