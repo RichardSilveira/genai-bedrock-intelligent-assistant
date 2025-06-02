@@ -20,6 +20,10 @@ iac/terraform.local.plan
 .DS_Store
 todos.txt
 
+.vscode/*
+!vscode/extensions.json
+!vscode/settings.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

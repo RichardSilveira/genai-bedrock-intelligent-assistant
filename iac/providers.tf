@@ -42,8 +42,7 @@ provider "awscc" {
   profile = var.aws_profile
 }
 
-# You must create the collection endpoint before enable this provider 🤷‍♂️
 provider "opensearch" {
-  url         = module.bedrock.default_collection.collection_endpoint
+  url         = var.kb_storage_type == "OPENSEARCH_SERVERLESS" ? module.bedrock.default_collection.collection_endpoint : "http://localhost:9200"
   healthcheck = false
 }

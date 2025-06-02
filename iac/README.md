@@ -33,7 +33,7 @@ The diagram below illustrates the networking components provisioned by the infra
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.98.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.99.1 |
 
 ## Modules
 
@@ -59,7 +59,9 @@ The diagram below illustrates the networking components provisioned by the infra
 | <a name="input_cost_center"></a> [cost\_center](#input\_cost\_center) | The cost center associated with the resources. | `string` | `null` | no |
 | <a name="input_created_by"></a> [created\_by](#input\_created\_by) | The arn of the IAM user or role that create the resources | `string` | n/a | yes |
 | <a name="input_environment"></a> [environment](#input\_environment) | The environment for the resources (e.g., dev, staging, prod). | `string` | n/a | yes |
+| <a name="input_kb_storage_type"></a> [kb\_storage\_type](#input\_kb\_storage\_type) | The storage type of a knowledge base. | `string` | `null` | no |
 | <a name="input_owner"></a> [owner](#input\_owner) | The owner of the resources. | `string` | n/a | yes |
+| <a name="input_pinecone_connection_string"></a> [pinecone\_connection\_string](#input\_pinecone\_connection\_string) | The endpoint URL for your index management page. | `string` | `null` | no |
 | <a name="input_project"></a> [project](#input\_project) | The project name for the resources. | `string` | n/a | yes |
 
 ## Outputs

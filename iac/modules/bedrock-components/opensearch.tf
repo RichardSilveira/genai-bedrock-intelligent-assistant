@@ -1,7 +1,7 @@
 # – OpenSearch Serverless Default –
 
 module "oss_knowledgebase" {
-  count                              = var.create_default_kb ? 1 : 0
+  count                              = var.create_opensearch_config ? 1 : 0
   source                             = "aws-ia/opensearch-serverless/aws"
   version                            = "0.0.4"
   allow_public_access_network_policy = var.allow_opensearch_public_access
@@ -39,7 +39,7 @@ module "oss_knowledgebase" {
 }
 
 resource "aws_opensearchserverless_access_policy" "updated_data_policy" {
-  count = var.create_default_kb ? 1 : 0
+  count = var.create_opensearch_config ? 1 : 0
 
   name = "os-access-policy-${var.resource_prefix}"
   type = "data"
@@ -82,7 +82,7 @@ resource "aws_opensearchserverless_access_policy" "updated_data_policy" {
 }
 
 resource "time_sleep" "wait_after_index_creation" {
-  count           = var.create_default_kb ? 1 : 0
+  count           = var.create_opensearch_config ? 1 : 0
   depends_on      = [module.oss_knowledgebase[0].vector_index]
   create_duration = "60s" # Wait for 60 seconds before creating the index
 }

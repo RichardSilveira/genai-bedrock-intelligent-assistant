@@ -35,3 +35,15 @@ variable "aws_profile" {
   type        = string
   default     = null
 }
+
+variable "kb_storage_type" {
+  description = "The storage type of a knowledge base."
+  type        = string
+  default     = null
+}
+
+variable "pinecone_connection_string" {
+  description = "The endpoint URL for your index management page."
+  type        = string
+  default     = null
+}
