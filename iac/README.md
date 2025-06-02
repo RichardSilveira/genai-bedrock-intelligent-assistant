@@ -26,14 +26,13 @@ The diagram below illustrates the networking components provisioned by the infra
 |------|---------|
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~>5.0 |
 | <a name="requirement_awscc"></a> [awscc](#requirement\_awscc) | = 1.35.0 |
-| <a name="requirement_opensearch"></a> [opensearch](#requirement\_opensearch) | 2.2.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | ~> 0.6 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.98.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.99.1 |
 
 ## Modules
 
@@ -60,6 +59,7 @@ The diagram below illustrates the networking components provisioned by the infra
 | <a name="input_created_by"></a> [created\_by](#input\_created\_by) | The arn of the IAM user or role that create the resources | `string` | n/a | yes |
 | <a name="input_environment"></a> [environment](#input\_environment) | The environment for the resources (e.g., dev, staging, prod). | `string` | n/a | yes |
 | <a name="input_owner"></a> [owner](#input\_owner) | The owner of the resources. | `string` | n/a | yes |
+| <a name="input_pinecone_connection_string"></a> [pinecone\_connection\_string](#input\_pinecone\_connection\_string) | The endpoint URL for your index management page. | `string` | `null` | no |
 | <a name="input_project"></a> [project](#input\_project) | The project name for the resources. | `string` | n/a | yes |
 
 ## Outputs

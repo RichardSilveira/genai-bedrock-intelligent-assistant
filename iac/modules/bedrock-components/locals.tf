@@ -11,6 +11,67 @@ locals {
   )
 
   # --------------------------------------------------
+  # KB Storage Configuration (Custom)
+  # --------------------------------------------------
+
+  pinecone_configuration = {
+    connection_string      = var.connection_string
+    credentials_secret_arn = var.credentials_secret_arn
+    field_mapping = {
+      metadata_field = var.metadata_field
+      text_field     = var.text_field
+      namespace      = var.namespace
+    }
+  }
+
+  opensearch_serverless_configuration = {
+    collection_arn    = var.kb_storage_type == "OPENSEARCH_SERVERLESS" ? module.oss_knowledgebase[0].opensearch_serverless_collection.arn : null
+    vector_index_name = var.kb_storage_type == "OPENSEARCH_SERVERLESS" ? module.oss_knowledgebase[0].vector_index.name : null
+    field_mapping = {
+      metadata_field = var.metadata_field
+      text_field     = var.text_field
+      vector_field   = var.vector_field
+    }
+  }
+
+  mongo_db_atlas_configuration = {
+    collection_name        = var.collection_name
+    credentials_secret_arn = var.credentials_secret_arn
+    database_name          = var.database_name
+    endpoint               = var.endpoint
+    vector_index_name      = var.vector_index_name
+    text_index_name        = var.text_index_name
+    field_mapping = {
+      metadata_field = var.metadata_field
+      text_field     = var.text_field
+      vector_field   = var.vector_field
+    }
+    endpoint_service_name = var.endpoint_service_name
+  }
+
+  neptune_analytics_configuration = {
+    graph_arn = var.graph_arn
+    field_mapping = {
+      metadata_field = var.metadata_field
+      text_field     = var.text_field
+    }
+  }
+
+  rds_configuration = {
+    credentials_secret_arn = var.credentials_secret_arn
+    database_name          = var.database_name
+    resource_arn           = var.resource_arn
+    table_name             = var.table_name
+    field_mapping = {
+      metadata_field        = var.metadata_field
+      primary_key_field     = var.primary_key_field
+      text_field            = var.text_field
+      vector_field          = var.vector_field
+      custom_metadata_field = var.custom_metadata_field
+    }
+  }
+
+  # --------------------------------------------------
   # Data Source
   # --------------------------------------------------
   create_cwl      = var.create_default_kb && var.create_kb_log_group
@@ -77,7 +138,7 @@ locals {
   # bedrock_agent_alias = var.create_agent_alias && var.use_aws_provider_alias ? aws_bedrockagent_agent_alias.bedrock_agent_alias : awscc_bedrock_agent_alias.bedrock_agent_alias
 
   counter_kb        = local.create_kb || var.existing_kb != null ? [1] : []
-  knowledge_base_id = local.create_kb ? (var.create_default_kb ? awscc_bedrock_knowledge_base.knowledge_base_default[0].id : (var.create_mongo_config ? awscc_bedrock_knowledge_base.knowledge_base_mongo[0].id : (var.create_opensearch_config ? awscc_bedrock_knowledge_base.knowledge_base_opensearch[0].id : (var.create_pinecone_config ? awscc_bedrock_knowledge_base.knowledge_base_pinecone[0].id : (var.create_rds_config ? awscc_bedrock_knowledge_base.knowledge_base_rds[0].id : null))))) : null
+  knowledge_base_id = local.create_kb ? awscc_bedrock_knowledge_base.knowledge_base_default[0].id : null
   knowledge_bases_value = {
     description          = var.kb_description
     knowledge_base_id    = local.create_kb ? local.knowledge_base_id : var.existing_kb

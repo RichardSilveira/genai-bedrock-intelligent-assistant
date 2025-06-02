@@ -1,31 +1,11 @@
-# output "default_collection" {
-#   value       = var.create_default_kb ? module.oss_knowledgebase[0].opensearch_serverless_collection : null
-#   description = "Opensearch default collection value."
-# }
-
-# output "default_kb_identifier" {
-#   value       = length(awscc_bedrock_knowledge_base.knowledge_base_default) > 0 ? awscc_bedrock_knowledge_base.knowledge_base_default[0].id : null
-#   description = "The unique identifier of the default knowledge base that was created.  If no default KB was requested, value will be null"
-# }
-
-output "mongo_kb_identifier" {
-  value       = length(awscc_bedrock_knowledge_base.knowledge_base_mongo) > 0 ? awscc_bedrock_knowledge_base.knowledge_base_mongo[0].id : null
-  description = "The unique identifier of the MongoDB knowledge base that was created.  If no MongoDB KB was requested, value will be null"
+output "default_collection" {
+  value       = var.create_opensearch_config ? module.oss_knowledgebase[0].opensearch_serverless_collection : null
+  description = "Opensearch default collection value."
 }
 
-output "opensearch_kb_identifier" {
-  value       = length(awscc_bedrock_knowledge_base.knowledge_base_opensearch) > 0 ? awscc_bedrock_knowledge_base.knowledge_base_opensearch[0].id : null
-  description = "The unique identifier of the OpenSearch knowledge base that was created.  If no OpenSearch KB was requested, value will be null"
-}
-
-output "pinecone_kb_identifier" {
-  value       = length(awscc_bedrock_knowledge_base.knowledge_base_pinecone) > 0 ? awscc_bedrock_knowledge_base.knowledge_base_pinecone[0].id : null
-  description = "The unique identifier of the Pinecone knowledge base that was created.  If no Pinecone KB was requested, value will be null"
-}
-
-output "rds_kb_identifier" {
-  value       = length(awscc_bedrock_knowledge_base.knowledge_base_rds) > 0 ? awscc_bedrock_knowledge_base.knowledge_base_rds[0].id : null
-  description = "The unique identifier of the RDS knowledge base that was created.  If no RDS KB was requested, value will be null"
+output "default_kb_identifier" {
+  value       = length(awscc_bedrock_knowledge_base.knowledge_base_default) > 0 ? awscc_bedrock_knowledge_base.knowledge_base_default[0].id : null
+  description = "The unique identifier of the default knowledge base that was created.  If no default KB was requested, value will be null"
 }
 
 output "datasource_identifier" {
