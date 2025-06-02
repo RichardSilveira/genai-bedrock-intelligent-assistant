@@ -57,37 +57,40 @@ resource "aws_iam_policy" "bedrock_knowledge_base_policy" {
 
   policy = jsonencode({
     "Version" : "2012-10-17",
-    "Statement" : [
-      # {
-      #   "Effect" : "Allow",
-      #   "Action" : [
-      #     "aoss:APIAccessAll"
-      #   ],
-      #   "Resource" : module.oss_knowledgebase[0].opensearch_serverless_collection.arn
-      # },
-      {
-        "Effect" : "Allow",
-        "Action" : [
-          "secretsmanager:GetSecretValue"
-        ],
-        "Resource" : var.credentials_secret_arn
-      },
-      {
-        "Effect" : "Allow",
-        "Action" : [
-          "bedrock:InvokeModel",
-        ],
-        "Resource" : var.kb_embedding_model_arn
-      },
-      {
-        "Effect" : "Allow",
-        "Action" : [
-          "bedrock:ListFoundationModels",
-          "bedrock:ListCustomModels"
-        ],
-        "Resource" : "*"
-      },
-    ]
+    "Statement" : concat(
+      var.kb_storage_type == "OPENSEARCH_SERVERLESS" ? [
+        {
+          "Effect" : "Allow",
+          "Action" : [
+            "aoss:APIAccessAll"
+          ],
+          "Resource" : module.oss_knowledgebase[0].opensearch_serverless_collection.arn
+        }
+      ] : [],
+      [
+        {
+          "Effect" : "Allow",
+          "Action" : [
+            "secretsmanager:GetSecretValue"
+          ],
+          "Resource" : var.credentials_secret_arn
+        },
+        {
+          "Effect" : "Allow",
+          "Action" : [
+            "bedrock:InvokeModel",
+          ],
+          "Resource" : var.kb_embedding_model_arn
+        },
+        {
+          "Effect" : "Allow",
+          "Action" : [
+            "bedrock:ListFoundationModels",
+            "bedrock:ListCustomModels"
+          ],
+          "Resource" : "*"
+        },
+    ])
   })
 }
 
