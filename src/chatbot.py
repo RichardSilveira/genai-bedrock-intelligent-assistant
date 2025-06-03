@@ -2,6 +2,8 @@ import os
 import json
 import boto3
 
+from aws_lambda_powertools import Logger
+
 # Get environment/configuration variables once (cold start optimization)
 KB_ID = os.environ["BEDROCK_KB_ID"]
 MODEL_ARN = os.environ["BEDROCK_MODEL_ARN"]
@@ -15,12 +17,16 @@ RAG_CONFIG = {
     },
 }
 
+logger = Logger()
 bedrock = boto3.client("bedrock-agent-runtime", region_name=REGION)
 
 
+@logger.inject_lambda_context
 def lambda_handler(event, context):
     try:
-        is_test_mode = getattr(context, "test_mode", False)
+        logger.info("Processing event")
+
+        is_test_mode = getattr(context, "e2e_test_mode", False)
 
         body = json.loads(event["body"]) if "body" in event and event["body"] else event
         user_input = body.get("input")

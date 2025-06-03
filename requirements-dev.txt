@@ -1,4 +1,6 @@
 -r requirements.txt
+aws-lambda-powertools>=2.36.0
+boto3
 black
 pytest
 checkov

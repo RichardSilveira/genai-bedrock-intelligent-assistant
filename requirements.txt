@@ -1,2 +1,1 @@
-boto3>=1.28.0
-aws-lambda-powertools>=2.36.0
+# aws-lambda-powertools is now provided by a Lambda Layer in production

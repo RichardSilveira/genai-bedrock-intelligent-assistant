@@ -47,3 +47,8 @@ variable "pinecone_connection_string" {
   type        = string
   default     = null
 }
+
+variable "bedrock_model_arn" {
+  description = "ARN of the Bedrock model to use for the chatbot Lambda."
+  type        = string
+}

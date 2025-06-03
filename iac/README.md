@@ -24,6 +24,7 @@ The diagram below illustrates the networking components provisioned by the infra
 
 | Name | Version |
 |------|---------|
+| <a name="requirement_archive"></a> [archive](#requirement\_archive) | ~> 2.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~>5.0 |
 | <a name="requirement_awscc"></a> [awscc](#requirement\_awscc) | = 1.35.0 |
 | <a name="requirement_opensearch"></a> [opensearch](#requirement\_opensearch) | 2.2.0 |
@@ -33,6 +34,7 @@ The diagram below illustrates the networking components provisioned by the infra
 
 | Name | Version |
 |------|---------|
+| <a name="provider_archive"></a> [archive](#provider\_archive) | 2.7.1 |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 5.99.1 |
 
 ## Modules
@@ -40,6 +42,7 @@ The diagram below illustrates the networking components provisioned by the infra
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_bedrock"></a> [bedrock](#module\_bedrock) | ./modules/bedrock-components | n/a |
+| <a name="module_chatbot_lambda"></a> [chatbot\_lambda](#module\_chatbot\_lambda) | ./modules/lambda | n/a |
 | <a name="module_networking"></a> [networking](#module\_networking) | ./modules/networking-components | n/a |
 | <a name="module_observability"></a> [observability](#module\_observability) | ./modules/observability-components | n/a |
 
@@ -47,6 +50,8 @@ The diagram below illustrates the networking components provisioned by the infra
 
 | Name | Type |
 |------|------|
+| [aws_security_group.lambda_sg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
+| [archive_file.chatbot_lambda](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
@@ -56,6 +61,7 @@ The diagram below illustrates the networking components provisioned by the infra
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_profile"></a> [aws\_profile](#input\_aws\_profile) | AWS CLI profile to use | `string` | `null` | no |
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS region to deploy resources | `string` | `null` | no |
+| <a name="input_bedrock_model_arn"></a> [bedrock\_model\_arn](#input\_bedrock\_model\_arn) | ARN of the Bedrock model to use for the chatbot Lambda. | `string` | n/a | yes |
 | <a name="input_cost_center"></a> [cost\_center](#input\_cost\_center) | The cost center associated with the resources. | `string` | `null` | no |
 | <a name="input_created_by"></a> [created\_by](#input\_created\_by) | The arn of the IAM user or role that create the resources | `string` | n/a | yes |
 | <a name="input_environment"></a> [environment](#input\_environment) | The environment for the resources (e.g., dev, staging, prod). | `string` | n/a | yes |
@@ -68,6 +74,8 @@ The diagram below illustrates the networking components provisioned by the infra
 
 | Name | Description |
 |------|-------------|
+| <a name="output_chatbot_lambda_arn"></a> [chatbot\_lambda\_arn](#output\_chatbot\_lambda\_arn) | ARN of the Chatbot Lambda function |
+| <a name="output_chatbot_lambda_function_name"></a> [chatbot\_lambda\_function\_name](#output\_chatbot\_lambda\_function\_name) | Name of the Chatbot Lambda function |
 | <a name="output_nat_gateway_ids"></a> [nat\_gateway\_ids](#output\_nat\_gateway\_ids) | The IDs of the NAT Gateways |
 | <a name="output_private_subnet_ids"></a> [private\_subnet\_ids](#output\_private\_subnet\_ids) | The IDs of the private subnets |
 | <a name="output_public_subnet_ids"></a> [public\_subnet\_ids](#output\_public\_subnet\_ids) | The IDs of the public subnets |

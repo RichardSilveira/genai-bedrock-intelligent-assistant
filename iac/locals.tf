@@ -35,4 +35,6 @@ locals {
       value = var.created_by
     },
   ]
+
+  lambda_layer_power_tools = "arn:aws:lambda:${local.region}:017000801446:layer:AWSLambdaPowertoolsPythonV3-python313-x86_64:16"
 }

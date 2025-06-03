@@ -57,3 +57,15 @@ output "nat_gateway_ids" {
 #   value       = module.bedrock_rag.knowledge_base_id
 # }
 
+# --------------------------------------------------
+# Lambda outputs
+# --------------------------------------------------
+output "chatbot_lambda_arn" {
+  description = "ARN of the Chatbot Lambda function"
+  value       = module.chatbot_lambda.function_arn
+}
+
+output "chatbot_lambda_function_name" {
+  description = "Name of the Chatbot Lambda function"
+  value       = module.chatbot_lambda.function_name
+}
