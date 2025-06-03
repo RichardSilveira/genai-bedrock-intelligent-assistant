@@ -4,7 +4,7 @@ from unittest.mock import patch, MagicMock
 from src import chatbot
 
 
-def test_lambda_handler_success():
+def test_should_return_answer_when_input_is_provided():
     event = {"body": json.dumps({"input": "Hello"})}
     context = None
     mock_response = {"output": {"text": "Hi there!"}}
@@ -17,7 +17,7 @@ def test_lambda_handler_success():
     assert json.loads(result["body"]) == {"answer": "Hi there!"}
 
 
-def test_lambda_handler_missing_input():
+def test_should_return_400_when_input_is_missing():
     event = {"body": json.dumps({})}
     context = None
 
@@ -27,7 +27,7 @@ def test_lambda_handler_missing_input():
     assert "input" in result["body"]
 
 
-def test_lambda_handler_exception():
+def test_should_return_500_when_invalid_json_is_passed():
     event = {"body": "not-json"}
     context = None
 

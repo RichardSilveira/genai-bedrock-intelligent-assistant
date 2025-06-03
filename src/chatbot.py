@@ -20,6 +20,8 @@ bedrock = boto3.client("bedrock-agent-runtime", region_name=REGION)
 
 def lambda_handler(event, context):
     try:
+        is_test_mode = getattr(context, "test_mode", False)
+
         body = json.loads(event["body"]) if "body" in event and event["body"] else event
         user_input = body.get("input")
         if not user_input:
@@ -27,10 +29,20 @@ def lambda_handler(event, context):
                 "statusCode": 400,
                 "body": json.dumps({"error": "'input' is required in request body."}),
             }
+
         response = bedrock.retrieve_and_generate(
             input={"text": user_input}, retrieveAndGenerateConfiguration=RAG_CONFIG
         )
         answer = response.get("output", {}).get("text")
+
+        if is_test_mode:
+            return {
+                "statusCode": 200,
+                "body": json.dumps(
+                    {"answer": answer, "citations": response.get("citations", [])}
+                ),
+            }
+
         return {"statusCode": 200, "body": json.dumps({"answer": answer})}
     except Exception as e:
         return {"statusCode": 500, "body": json.dumps({"error": str(e)})}
