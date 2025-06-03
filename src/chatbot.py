@@ -15,7 +15,6 @@ RAG_CONFIG = {
     },
 }
 
-# Initialize Bedrock Agent Runtime client with region
 bedrock = boto3.client("bedrock-agent-runtime", region_name=REGION)
 
 

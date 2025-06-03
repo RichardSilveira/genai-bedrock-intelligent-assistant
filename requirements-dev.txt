@@ -3,3 +3,4 @@ black
 pytest
 checkov
 awscurl
+python-dotenv
