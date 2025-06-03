@@ -198,3 +198,6 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Lambda build artifacts
+dist/

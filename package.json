@@ -8,7 +8,9 @@
     "python-setup": "python3 -m venv .venv && echo 'Virtual environment .venv created. Activate it by running: source .venv/bin/activate'",
     "python-install": "pip install -r requirements.txt",
     "python-install-dev": "pip install -r requirements-dev.txt",
-    "checkov": "./scripts/run-checkov.sh"
+    "checkov": "./scripts/run-checkov.sh",
+    "test:unit": "pytest tests/unit",
+    "test:integration": "pytest tests/integration"
   },
   "lint-staged": {
     "**/*.{tf,tfvars}": [

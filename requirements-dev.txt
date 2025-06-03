@@ -1,5 +1,7 @@
 -r requirements.txt
+boto3
 black
 pytest
 checkov
 awscurl
+python-dotenv
