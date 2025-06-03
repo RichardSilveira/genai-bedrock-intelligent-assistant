@@ -4,16 +4,10 @@ from unittest.mock import patch, MagicMock
 from src import chatbot
 
 
-class FakeContext:
-    def __init__(self):
-        self.test_mode = True
-
-
-def test_should_respond_with_greeting_when_kb_is_accessible():
+def test_should_respond_with_greeting_when_kb_is_accessible(lambda_context):
     event = {"body": json.dumps({"input": "Hello"})}
-    context = FakeContext()
-
-    result = chatbot.lambda_handler(event, context)
+    lambda_context.e2e_test_mode = True
+    result = chatbot.lambda_handler(event, lambda_context)
     body = json.loads(result["body"])
 
     assert result["statusCode"] == 200
