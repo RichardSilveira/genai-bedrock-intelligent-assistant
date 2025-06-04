@@ -52,6 +52,7 @@ module "chatbot_lambda" {
 }
 
 # Security group for Lambda function
+# todo - add ingress rules for API GW
 resource "aws_security_group" "lambda_sg" {
 
   name        = "${local.resource_prefix}-lambda-sg"

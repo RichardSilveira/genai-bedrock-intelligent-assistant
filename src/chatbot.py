@@ -1,7 +1,6 @@
 import os
 import json
 import boto3
-
 from aws_lambda_powertools import Logger
 
 # Get environment/configuration variables once (cold start optimization)
