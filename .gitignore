@@ -16,6 +16,8 @@ iac/.terraform.lock.hcl
 iac/*.zip
 iac/terraform.local.plan
 
+iac/lambda-packages/
+
 # Misc
 .DS_Store
 todos.txt
