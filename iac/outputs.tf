@@ -69,3 +69,21 @@ output "chatbot_lambda_function_name" {
   description = "Name of the Chatbot Lambda function"
   value       = module.chatbot_lambda.function_name
 }
+
+# --------------------------------------------------
+# API Gateway outputs
+# --------------------------------------------------
+output "api_endpoint" {
+  description = "API Gateway endpoint URL for the default stage"
+  value       = aws_apigatewayv2_api.chatbot_api.api_endpoint
+}
+
+output "api_execution_arn" {
+  description = "API Gateway execution ARN"
+  value       = aws_apigatewayv2_api.chatbot_api.execution_arn
+}
+
+output "api_id" {
+  description = "API Gateway ID"
+  value       = aws_apigatewayv2_api.chatbot_api.id
+}
