@@ -93,3 +93,16 @@ output "api_key" {
   value       = random_password.api_key.result
   sensitive   = true
 }
+
+# --------------------------------------------------
+# CloudFront outputs
+# --------------------------------------------------
+output "cloudfront_distribution_id" {
+  description = "The ID of the CloudFront distribution"
+  value       = aws_cloudfront_distribution.api_distribution.id
+}
+
+output "cloudfront_distribution_domain_name" {
+  description = "The domain name of the CloudFront distribution"
+  value       = aws_cloudfront_distribution.api_distribution.domain_name
+}
