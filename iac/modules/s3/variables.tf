@@ -35,3 +35,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "resource_policy" {
+  description = "Optional JSON resource policy to attach to the bucket"
+  type        = string
+  default     = null
+}

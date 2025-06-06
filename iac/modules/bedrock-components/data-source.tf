@@ -6,6 +6,36 @@ module "kb_data_source_bucket" {
   name            = "${var.kb_name}-data-source"
   lifecycle_mode  = "standard"
   tags            = var.kb_tags != null ? var.kb_tags : { Name = "S3 Data Source" }
+
+  # Add resource policy to allow Bedrock service to access the bucket
+  # while denying access to all other principals except the root account and current caller
+  resource_policy = var.create_default_kb ? jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "DenyAllOthers"
+        Effect    = "Deny"
+        Principal = "*"
+        Action    = "s3:*"
+        Resource = [
+          "arn:aws:s3:::${var.resource_prefix}-${var.kb_name}-data-source",
+          "arn:aws:s3:::${var.resource_prefix}-${var.kb_name}-data-source/*"
+        ]
+        Condition = {
+          StringNotEquals = {
+            "aws:PrincipalServiceName" : "bedrock.amazonaws.com"
+          }
+          ArnNotLike = {
+            "aws:PrincipalArn" : [
+              "arn:aws:iam::${local.account_id}:root",
+              data.aws_caller_identity.current.arn,
+              var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
+            ]
+          }
+        }
+      }
+    ]
+  }) : null
 }
 
 resource "awscc_bedrock_data_source" "knowledge_base_ds" {
@@ -60,7 +90,7 @@ resource "awscc_logs_delivery" "knowledge_base_log_delivery" {
   }]
 }
 
-# – Knowledge Base Web Crawler Data Source
+# – Knowledge Base Web Crawler Data Source
 resource "awscc_bedrock_data_source" "knowledge_base_web_crawler" {
   count             = var.create_web_crawler ? 1 : 0
   knowledge_base_id = var.create_default_kb ? awscc_bedrock_knowledge_base.knowledge_base_default[0].id : var.existing_kb
@@ -86,7 +116,7 @@ resource "awscc_bedrock_data_source" "knowledge_base_web_crawler" {
   vector_ingestion_configuration = var.create_vector_ingestion_configuration == false ? null : local.vector_ingestion_configuration
 }
 
-# – Knowledge Base Confluence Data Source
+# – Knowledge Base Confluence Data Source
 resource "awscc_bedrock_data_source" "knowledge_base_confluence" {
   count             = var.create_confluence ? 1 : 0
   knowledge_base_id = var.create_default_kb ? awscc_bedrock_knowledge_base.knowledge_base_default[0].id : var.existing_kb
@@ -113,7 +143,7 @@ resource "awscc_bedrock_data_source" "knowledge_base_confluence" {
   vector_ingestion_configuration = var.create_vector_ingestion_configuration == false ? null : local.vector_ingestion_configuration
 }
 
-# – Knowledge Base Sharepoint Data Source
+# – Knowledge Base Sharepoint Data Source
 resource "awscc_bedrock_data_source" "knowledge_base_sharepoint" {
   count             = var.create_sharepoint ? 1 : 0
   knowledge_base_id = var.create_default_kb ? awscc_bedrock_knowledge_base.knowledge_base_default[0].id : var.existing_kb
@@ -142,7 +172,7 @@ resource "awscc_bedrock_data_source" "knowledge_base_sharepoint" {
   vector_ingestion_configuration = var.create_vector_ingestion_configuration == false ? null : local.vector_ingestion_configuration
 }
 
-# – Knowledge Base Salesforce Data Source
+# – Knowledge Base Salesforce Data Source
 resource "awscc_bedrock_data_source" "knowledge_base_salesforce" {
   count             = var.create_salesforce ? 1 : 0
   knowledge_base_id = var.create_default_kb ? awscc_bedrock_knowledge_base.knowledge_base_default[0].id : var.existing_kb
