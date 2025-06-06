@@ -87,3 +87,9 @@ output "api_id" {
   description = "API Gateway ID"
   value       = aws_apigatewayv2_api.chatbot_api.id
 }
+
+output "api_key" {
+  description = "API Key for accessing the Chatbot API (sensitive)"
+  value       = random_password.api_key.result
+  sensitive   = true
+}

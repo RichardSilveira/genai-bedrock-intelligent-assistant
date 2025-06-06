@@ -40,15 +40,18 @@ resource "aws_apigatewayv2_integration" "chatbot_lambda_integration" {
 # --------------------------------------------------
 
 resource "aws_apigatewayv2_route" "chatbot_post_route" {
-  api_id    = aws_apigatewayv2_api.chatbot_api.id
-  route_key = "POST /chat"
-  target    = "integrations/${aws_apigatewayv2_integration.chatbot_lambda_integration.id}"
+  api_id             = aws_apigatewayv2_api.chatbot_api.id
+  route_key          = "POST /chat"
+  target             = "integrations/${aws_apigatewayv2_integration.chatbot_lambda_integration.id}"
+  authorization_type = "CUSTOM"
+  authorizer_id      = aws_apigatewayv2_authorizer.api_key_authorizer.id
 }
 
 resource "aws_apigatewayv2_route" "chatbot_options_route" {
   api_id    = aws_apigatewayv2_api.chatbot_api.id
   route_key = "OPTIONS /chat"
   target    = "integrations/${aws_apigatewayv2_integration.chatbot_lambda_integration.id}"
+  # OPTIONS requests don't need authorization
 }
 
 # --------------------------------------------------
