@@ -10,7 +10,7 @@ resource "aws_apigatewayv2_api" "chatbot_api" {
   cors_configuration {
     allow_origins = ["*"] # For production, restrict to specific domains
     allow_methods = ["GET", "POST", "OPTIONS"]
-    allow_headers = ["Content-Type", "Authorization", "X-Amz-Date", "X-Api-Key", "X-Amz-Security-Token"]
+    allow_headers = ["Content-Type", "Authorization", "X-Amz-Date", "X-Api-Key", "X-Origin-Verify", "X-Amz-Security-Token"]
     max_age       = 300
   }
 
@@ -51,7 +51,7 @@ resource "aws_apigatewayv2_route" "chatbot_options_route" {
   api_id    = aws_apigatewayv2_api.chatbot_api.id
   route_key = "OPTIONS /chat"
   target    = "integrations/${aws_apigatewayv2_integration.chatbot_lambda_integration.id}"
-  # OPTIONS requests don't need authorization
+  # OPTIONS requests don't need authorization for CORS preflight
 }
 
 # --------------------------------------------------

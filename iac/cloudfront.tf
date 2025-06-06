@@ -10,6 +10,24 @@ data "aws_cloudfront_origin_request_policy" "all_viewer_except_host_header" {
   name = "Managed-AllViewerExceptHostHeader"
 }
 
+# Create a custom header for CloudFront to API Gateway authentication
+resource "random_password" "cloudfront_secret" {
+  length  = 32
+  special = false
+}
+
+# Store the CloudFront secret in SSM Parameter Store
+resource "aws_ssm_parameter" "cloudfront_secret" {
+  name        = "/${local.resource_prefix}/cloudfront-secret"
+  description = "Secret for CloudFront to API Gateway authentication"
+  type        = "SecureString"
+  value       = random_password.cloudfront_secret.result
+
+  tags = merge(local.default_tags, {
+    Name = "${local.resource_prefix}-cloudfront-secret"
+  })
+}
+
 resource "aws_cloudfront_distribution" "api_distribution" {
   enabled             = true
   is_ipv6_enabled     = true
@@ -27,6 +45,12 @@ resource "aws_cloudfront_distribution" "api_distribution" {
       https_port             = 443
       origin_protocol_policy = "https-only"
       origin_ssl_protocols   = ["TLSv1.2"]
+    }
+
+    # Add custom header for CloudFront to API Gateway authentication
+    custom_header {
+      name  = "X-Origin-Verify"
+      value = random_password.cloudfront_secret.result
     }
   }
 
@@ -59,4 +83,8 @@ resource "aws_cloudfront_distribution" "api_distribution" {
     cloudfront_default_certificate = true
   }
 
+  # Add tags
+  tags = merge(local.default_tags, {
+    Name = "${local.resource_prefix}-api-distribution"
+  })
 }

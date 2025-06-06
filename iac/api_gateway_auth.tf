@@ -1,5 +1,5 @@
 # --------------------------------------------------
-# API Gateway Authentication - API Key
+# API Gateway Authentication - API Key & CloudFront Origin Verification
 # --------------------------------------------------
 
 # Generate a secure API key
@@ -25,8 +25,8 @@ resource "aws_ssm_parameter" "api_key" {
 resource "aws_apigatewayv2_authorizer" "api_key_authorizer" {
   api_id           = aws_apigatewayv2_api.chatbot_api.id
   authorizer_type  = "REQUEST"
-  identity_sources = ["$request.header.x-api-key"]
-  name             = "api-key-authorizer"
+  identity_sources = ["$request.header.x-api-key", "$request.header.x-origin-verify"]
+  name             = "api-key-cloudfront-authorizer"
 
   authorizer_uri                    = module.authorizer_lambda.function_invoke_arn
   authorizer_payload_format_version = "2.0"
