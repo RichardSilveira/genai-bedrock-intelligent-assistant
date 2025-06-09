@@ -2,10 +2,10 @@
 # AWS WAF Web ACL for CloudFront Distribution
 # --------------------------------------------------
 
-resource "aws_wafv2_web_acl" "cloudfront_waf" {
+resource "aws_wafv2_web_acl" "application_waf" {
   provider    = aws.us_east_1 # Must use us-east-1 for CloudFront WAF
-  name        = "${local.resource_prefix}-cloudfront-waf"
-  description = "WAF Web ACL for CloudFront distribution"
+  name        = "${local.resource_prefix}-application-waf"
+  description = "WAF Web ACL for application protection at the edge for CloudFront"
   scope       = "CLOUDFRONT"
 
   default_action {
@@ -286,26 +286,14 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
   # Global configuration for the Web ACL
   visibility_config {
     cloudwatch_metrics_enabled = true
-    metric_name                = "${local.resource_prefix}-cloudfront-waf-metrics"
+    metric_name                = "${local.resource_prefix}-application-waf-metrics"
     sampled_requests_enabled   = true
   }
 
   tags = merge(local.default_tags, {
-    Name = "${local.resource_prefix}-cloudfront-waf"
+    Name = "${local.resource_prefix}-application-waf"
   })
 }
-
-# --------------------------------------------------
-# WAF Web ACL Association with CloudFront Distribution
-# --------------------------------------------------
-
-# CloudFront ARN format is different for WAF associations
-# Format: arn:aws:cloudfront::account-id:distribution/distribution-id
-# resource "aws_wafv2_web_acl_association" "cloudfront_waf_association" {
-#   provider     = aws.us_east_1 # Must use us-east-1 for CloudFront WAF
-#   resource_arn = "arn:aws:cloudfront::${data.aws_caller_identity.current.account_id}:distribution/${aws_cloudfront_distribution.api_distribution.id}"
-#   web_acl_arn  = aws_wafv2_web_acl.cloudfront_waf.arn
-# }
 
 # --------------------------------------------------
 # CloudWatch Logs for WAF
@@ -313,7 +301,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
 
 resource "aws_cloudwatch_log_group" "waf_logs" {
   provider          = aws.us_east_1
-  name              = "aws-waf-logs-${local.resource_prefix}-cloudfront-waf"
+  name              = "aws-waf-logs-${local.resource_prefix}-application-waf"
   retention_in_days = 90
   tags = merge(local.default_tags, {
     Name = "${local.resource_prefix}-waf-logs"
@@ -327,7 +315,7 @@ resource "aws_cloudwatch_log_group" "waf_logs" {
 resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
   provider                = aws.us_east_1 # Must use us-east-1 for CloudFront WAF
   log_destination_configs = [aws_cloudwatch_log_group.waf_logs.arn]
-  resource_arn            = aws_wafv2_web_acl.cloudfront_waf.arn
+  resource_arn            = aws_wafv2_web_acl.application_waf.arn
 
   logging_filter {
     default_behavior = "KEEP"

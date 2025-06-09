@@ -34,6 +34,16 @@ output "nat_gateway_ids" {
 #   value       = module.observability.config_sns_topic_arn
 # }
 
+output "bedrock_model_invocation_log_group_name" {
+  description = "Name of the CloudWatch log group for Bedrock model invocation logs"
+  value       = module.observability.bedrock_model_invocation_log_group_name
+}
+
+output "bedrock_logging_role_arn" {
+  description = "ARN of the IAM role used for Bedrock model invocation logging"
+  value       = module.observability.bedrock_logging_role_arn
+}
+
 # --------------------------------------------------
 # Bedrock RAG outputs
 # --------------------------------------------------
@@ -56,6 +66,31 @@ output "nat_gateway_ids" {
 #   description = "ID of the Bedrock Knowledge Base"
 #   value       = module.bedrock_rag.knowledge_base_id
 # }
+
+output "bedrock_knowledge_base_id" {
+  description = "ID of the Bedrock Knowledge Base"
+  value       = module.bedrock.default_kb_identifier
+}
+
+output "bedrock_knowledge_base_role_name" {
+  description = "Name of the IAM role used by the Bedrock Knowledge Base"
+  value       = module.bedrock.knowledge_base_role_name
+}
+
+output "bedrock_s3_data_source_name" {
+  description = "Name of the S3 bucket storing RAG documents"
+  value       = module.bedrock.s3_data_source_name
+}
+
+output "bedrock_s3_data_source_arn" {
+  description = "ARN of the S3 bucket storing RAG documents"
+  value       = module.bedrock.s3_data_source_arn
+}
+
+output "bedrock_data_source_id" {
+  description = "ID of the Bedrock data source"
+  value       = module.bedrock.datasource_identifier
+}
 
 # --------------------------------------------------
 # Lambda outputs

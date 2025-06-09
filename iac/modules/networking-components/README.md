@@ -1,3 +1,9 @@
+# Networking Components
+
+This module creates a complete AWS networking infrastructure for secure application deployment. It provisions a VPC with public and private subnets across multiple availability zones, NAT gateways for outbound internet access from private subnets, and an internet gateway for public subnet connectivity. The module also implements network ACLs with separate rule sets for public subnets (allowing HTTP/HTTPS ingress and ephemeral ports) and private subnets (restricting direct internet access while allowing VPC traffic).
+
+The module supports flexible configuration including optional third AZ deployment and configurable NAT gateway redundancy. All networking components are properly tagged and follow AWS best practices for security and availability.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

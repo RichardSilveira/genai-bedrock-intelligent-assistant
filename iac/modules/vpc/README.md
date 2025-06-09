@@ -1,3 +1,15 @@
+# VPC Module
+
+This module creates a secure and highly available AWS VPC infrastructure with public and private subnets across multiple availability zones. It implements AWS best practices for network security including dedicated network ACLs for public and private subnets with carefully configured rules to allow only necessary traffic (HTTP/HTTPS, ephemeral ports, and internal VPC communication):
+
+- Network ACLs with appropriate ingress/egress rules for both public and private subnets
+- Properly configured route tables with internet and NAT gateway routes
+- Locked-down default security group
+- Support for multi-AZ deployments with optional third AZ
+- Configurable NAT gateway redundancy
+
+The module is designed to be flexible while enforcing security best practices and providing a solid foundation for deploying AWS workloads.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

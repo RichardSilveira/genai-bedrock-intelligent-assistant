@@ -67,7 +67,7 @@ The diagram below illustrates the networking components provisioned by the infra
 | [aws_security_group.lambda_sg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_ssm_parameter.api_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_ssm_parameter.cloudfront_secret](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
-| [aws_wafv2_web_acl.cloudfront_waf](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_web_acl) | resource |
+| [aws_wafv2_web_acl.application_waf](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_web_acl) | resource |
 | [aws_wafv2_web_acl_logging_configuration.waf_logging](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_web_acl_logging_configuration) | resource |
 | [random_password.api_key](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [random_password.cloudfront_secret](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
@@ -101,6 +101,13 @@ The diagram below illustrates the networking components provisioned by the infra
 | <a name="output_api_execution_arn"></a> [api\_execution\_arn](#output\_api\_execution\_arn) | API Gateway execution ARN |
 | <a name="output_api_id"></a> [api\_id](#output\_api\_id) | API Gateway ID |
 | <a name="output_api_key"></a> [api\_key](#output\_api\_key) | API Key for accessing the Chatbot API (sensitive) |
+| <a name="output_bedrock_data_source_id"></a> [bedrock\_data\_source\_id](#output\_bedrock\_data\_source\_id) | ID of the Bedrock data source |
+| <a name="output_bedrock_knowledge_base_id"></a> [bedrock\_knowledge\_base\_id](#output\_bedrock\_knowledge\_base\_id) | ID of the Bedrock Knowledge Base |
+| <a name="output_bedrock_knowledge_base_role_name"></a> [bedrock\_knowledge\_base\_role\_name](#output\_bedrock\_knowledge\_base\_role\_name) | Name of the IAM role used by the Bedrock Knowledge Base |
+| <a name="output_bedrock_logging_role_arn"></a> [bedrock\_logging\_role\_arn](#output\_bedrock\_logging\_role\_arn) | ARN of the IAM role used for Bedrock model invocation logging |
+| <a name="output_bedrock_model_invocation_log_group_name"></a> [bedrock\_model\_invocation\_log\_group\_name](#output\_bedrock\_model\_invocation\_log\_group\_name) | Name of the CloudWatch log group for Bedrock model invocation logs |
+| <a name="output_bedrock_s3_data_source_arn"></a> [bedrock\_s3\_data\_source\_arn](#output\_bedrock\_s3\_data\_source\_arn) | ARN of the S3 bucket storing RAG documents |
+| <a name="output_bedrock_s3_data_source_name"></a> [bedrock\_s3\_data\_source\_name](#output\_bedrock\_s3\_data\_source\_name) | Name of the S3 bucket storing RAG documents |
 | <a name="output_chatbot_lambda_arn"></a> [chatbot\_lambda\_arn](#output\_chatbot\_lambda\_arn) | ARN of the Chatbot Lambda function |
 | <a name="output_chatbot_lambda_function_name"></a> [chatbot\_lambda\_function\_name](#output\_chatbot\_lambda\_function\_name) | Name of the Chatbot Lambda function |
 | <a name="output_cloudfront_distribution_domain_name"></a> [cloudfront\_distribution\_domain\_name](#output\_cloudfront\_distribution\_domain\_name) | The domain name of the CloudFront distribution |
