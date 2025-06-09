@@ -1,6 +1,6 @@
 # Bedrock Components
 
-This module creates and manages AWS Bedrock resources for Retrieval-Augmented Generation (RAG) applications, including knowledge bases, vector stores, and data sources. It supports multiple storage backends including Pinecone, OpenSearch, among others.
+This module creates and manages AWS Bedrock resources for Retrieval-Augmented Generation (RAG) applications, including knowledge bases, vector stores, and data sources. It supports multiple storage backends but mainly focused on Pinecone, and OpenSearch.
 
 The module handles the complex IAM permissions required for Bedrock knowledge bases, manages data source connections, and configures vector embeddings for semantic search. It's designed to work with the Titan Embeddings model for converting text into vector representations.
 

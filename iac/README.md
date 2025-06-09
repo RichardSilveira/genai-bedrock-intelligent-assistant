@@ -13,6 +13,37 @@
 - Update the [vpc.tf](vpc.tf) file based on the region you're intended to use
 - Run export AWS_ACCESS_KEY_ID=<ci_principal_arn access-key> && export AWS_SECRET_ACCESS_KEY=<ci_principal_arn secret> in terminal before run any terraform command
 
+## API Communication and Security Architecture
+
+This architecture follows a defense-in-depth model to provide a secure and globally accelerated entry point for the application's API. Its design focuses on protecting traffic at the network edge, accelerating user requests via the AWS global backbone, and decoupling the API endpoint layer from the core RAG processing logic.
+
+![API Communication and Security Architecture](./assets/api-communication-security-architecture.drawio.png)
+
+The request flow and key components are:
+
+- **AWS WAF:** Provides a defense-in-depth, Layer 7 firewall at the network edge. It inspects incoming requests using a prioritized, multi-layered strategy:
+
+  - **IP & Rate Limiting:** Immediately blocks known malicious IPs (`AmazonIpReputationList`) and provides automated protection against brute-force and DDoS attacks using a `RateLimitRule`.
+  - **Threat Signature Matching:** Utilizes AWS Managed Rule Sets to block requests from anonymous proxies (`AnonymousIpList`), known exploit patterns (`KnownBadInputsRuleSet`), and common web attacks defined in the OWASP Top 10 (`CoreRuleSet`).
+
+- **Amazon CloudFront:** Acts as the global Content Delivery Network (CDN). It accelerates API performance by routing users to the nearest edge location and utilizes the AWS global backbone to communicate with the origin. It is configured to be the **only** entry point to the API Gateway.
+
+- **Amazon API Gateway (HTTP API):** Serves as the managed, regional entry point for our backend. It handles request validation, throttling, and routing. Access to the API Gateway is locked down and verified by a **custom Lambda Authorizer**, which performs two critical checks:
+
+  1.  It validates a secret `X-Origin-Verify` header to ensure the request is from our CloudFront distribution.
+  2.  It validates the client-provided `x-api-key` required for API access.
+
+- **AWS Lambda:** The function is invoked synchronously by API Gateway and runs within our private VPC.
+  - **Availability:** To ensure responsiveness during traffic spikes and protect downstream resources, the function is configured with a **reserved concurrency** of 500.
+  - **Dependency Management:** Common libraries and dependencies are managed using **Lambda Layers** to promote code re-use, better organization, and smaller deployment package sizes.
+  - **Core Logic:** The function's code orchestrates the business logic, making secure calls to the Amazon Bedrock backend to power the RAG assistant.
+
+## Networking Architecture
+
+The diagram below illustrates the networking components provisioned by the infrastructure code. While networking is not the main focus of this repository, it demonstrates production-grade VPC design and AWS best practices.
+
+![Networking Components](./assets/networking-components.drawio.png)
+
 ## Networking Architecture
 
 The diagram below illustrates the networking components provisioned by the infrastructure code. While networking is not the main focus of this repository, it demonstrates production-grade VPC design and AWS best practices.
