@@ -87,4 +87,6 @@ resource "aws_cloudfront_distribution" "api_distribution" {
   tags = merge(local.default_tags, {
     Name = "${local.resource_prefix}-api-distribution"
   })
+
+  web_acl_id = aws_wafv2_web_acl.application_waf.arn
 }
