@@ -24,6 +24,7 @@ No modules.
 | [aws_s3_bucket.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_lifecycle_configuration.cost_optimized_lifecycle](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration) | resource |
 | [aws_s3_bucket_lifecycle_configuration.standard_lifecycle](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration) | resource |
+| [aws_s3_bucket_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_s3_bucket_public_access_block.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.enforced_encryption](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
 | [aws_s3_bucket_versioning.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_versioning) | resource |
@@ -36,6 +37,7 @@ No modules.
 | <a name="input_lifecycle_mode"></a> [lifecycle\_mode](#input\_lifecycle\_mode) | Lifecycle configuration mode: 'standard' (project best practices) or 'cost\_optimized' (aggressive cost savings) | `string` | `"standard"` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name of the S3 bucket (will be combined with prefix) | `string` | n/a | yes |
 | <a name="input_newer_noncurrent_versions"></a> [newer\_noncurrent\_versions](#input\_newer\_noncurrent\_versions) | Number of newer versions to keep before deleting noncurrent versions | `number` | `3` | no |
+| <a name="input_resource_policy"></a> [resource\_policy](#input\_resource\_policy) | Optional JSON resource policy to attach to the bucket | `string` | `null` | no |
 | <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | Prefix to use for resource names | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to all resources | `map(string)` | `{}` | no |
 

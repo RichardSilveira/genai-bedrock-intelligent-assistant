@@ -29,6 +29,8 @@ module "chatbot_lambda" {
   subnet_ids         = module.networking.private_subnet_ids
   security_group_ids = [aws_security_group.lambda_sg.id]
 
+  reserved_concurrent_executions = 500 # to ensure capacity in case of a spike as this is the key application's lambda
+
   layers = [
     local.lambda_layer_power_tools
   ]
@@ -52,12 +54,13 @@ module "chatbot_lambda" {
 }
 
 # Security group for Lambda function
-# todo - add ingress rules for API GW
 resource "aws_security_group" "lambda_sg" {
-
   name        = "${local.resource_prefix}-lambda-sg"
   description = "Security group for Lambda functions"
   vpc_id      = module.networking.vpc_id
+
+  /* As API GW leverages the AWS network backbone there is no need to setup an ingress (inbound) rules
+    unless we wan't to allow traffic to the Lambda ENI's from other resources from within our private network (VPC, Peering VPC's, Transit GW, etc) */
 
   egress {
     from_port   = 0

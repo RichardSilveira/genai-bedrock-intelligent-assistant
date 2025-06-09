@@ -42,6 +42,23 @@ provider "aws" {
   }
 }
 
+# Provider for CloudFront WAF (must be in us-east-1)
+provider "aws" {
+  alias   = "us_east_1"
+  region  = "us-east-1"
+  profile = var.aws_profile
+
+  default_tags {
+    tags = {
+      Owner            = var.owner
+      CostCenter       = var.cost_center
+      Project          = var.project
+      Environment      = var.environment
+      "user:CreatedBy" = var.created_by
+    }
+  }
+}
+
 provider "awscc" {
   region  = var.aws_region
   profile = var.aws_profile

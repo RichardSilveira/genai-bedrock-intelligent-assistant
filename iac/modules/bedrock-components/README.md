@@ -1,6 +1,8 @@
 # Bedrock Components
 
-This module contains all resources required related to bedrock and its AI capabilities
+This module creates and manages AWS Bedrock resources for Retrieval-Augmented Generation (RAG) applications, including knowledge bases, vector stores, and data sources. It supports multiple storage backends but mainly focused on Pinecone, and OpenSearch.
+
+The module handles the complex IAM permissions required for Bedrock knowledge bases, manages data source connections, and configures vector embeddings for semantic search. It's designed to work with the Titan Embeddings model for converting text into vector representations.
 
 > This module was built on top of the [terraform-aws-bedrock](https://github.com/aws-ia/terraform-aws-bedrock) with many customizations.
 
@@ -10,16 +12,16 @@ The OpenSearch index configuration is critical for proper functioning of the Bed
 
 ### Key Fields and Their Purpose
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `vector` or `bedrock-knowledge-base-default-vector` | knn_vector | Stores the vector embeddings for semantic search |
-| `AMAZON_BEDROCK_TEXT_CHUNK` | text | Contains the actual text chunks from documents |
-| `AMAZON_BEDROCK_METADATA` | text (index: false) | Stores metadata about the document but isn't searchable |
-| `AMAZON_BEDROCK_TEXT` | text + keyword | Full text content with keyword subfield for exact matching |
-| `id` | text + keyword | Unique identifier for each document/chunk |
-| `x-amz-bedrock-kb-data-source-id` | text + keyword | Identifies which data source the document came from |
-| `x-amz-bedrock-kb-document-page-number` | long | Tracks which page of a document a chunk came from |
-| `x-amz-bedrock-kb-source-uri` | text + keyword | Stores the original location/path of the document |
+| Field                                               | Type                | Description                                                |
+| --------------------------------------------------- | ------------------- | ---------------------------------------------------------- |
+| `vector` or `bedrock-knowledge-base-default-vector` | knn_vector          | Stores the vector embeddings for semantic search           |
+| `AMAZON_BEDROCK_TEXT_CHUNK`                         | text                | Contains the actual text chunks from documents             |
+| `AMAZON_BEDROCK_METADATA`                           | text (index: false) | Stores metadata about the document but isn't searchable    |
+| `AMAZON_BEDROCK_TEXT`                               | text + keyword      | Full text content with keyword subfield for exact matching |
+| `id`                                                | text + keyword      | Unique identifier for each document/chunk                  |
+| `x-amz-bedrock-kb-data-source-id`                   | text + keyword      | Identifies which data source the document came from        |
+| `x-amz-bedrock-kb-document-page-number`             | long                | Tracks which page of a document a chunk came from          |
+| `x-amz-bedrock-kb-source-uri`                       | text + keyword      | Stores the original location/path of the document          |
 
 ### Vector Configuration
 
@@ -161,6 +163,7 @@ awscurl --service aoss \
 ### Testing the Knowledge Base
 
 This is the same as testing it via the AWS Console
+
 > It can be integrated in the CI as a Integration Testing strategy
 
 ```bash

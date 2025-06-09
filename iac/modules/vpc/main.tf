@@ -37,7 +37,7 @@ resource "aws_subnet" "public_1" {
   cidr_block        = var.public_subnet_1_cidr
   availability_zone = var.public_subnet_1_az
 
-  map_public_ip_on_launch = false
+  map_public_ip_on_launch = false # todo - update this module's readme to share that public id addresses are not being assigned to the EC2 Instance's ENI's by design
 
   tags = merge(var.tags, { Name = "${var.name}-public-subnet-1" })
 }
