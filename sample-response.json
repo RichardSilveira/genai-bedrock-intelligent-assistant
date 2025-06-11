@@ -1,0 +1,18 @@
+'{
+  "answer": "Hello!\\n\\nThank you for reaching out to AnyTicket Customer Support. Regarding refunds for canceled events, here\'s what you need to know:\\n\\n**Refunds for Canceled Events:**\\n- **Official Cancellation by Organizer:** If an event is officially canceled by the organizer, AnyTicket will automatically process a refund to the original purchaser for the ticket\'s face value and associated service fees.\\n- **Reschedule Notification:** If an event is postponed or rescheduled to a new date or time, AnyTicket will notify ticket holders. Your original tickets will typically be valid for the new date. If you cannot attend the rescheduled event, AnyTicket will provide information on any available refund options or refund request windows, as determined by our policy and the event organizer.\\n\\nFor more detailed information, please review AnyTicket\\u2019s Purchase Policy at the time of your purchase.\\n\\nIf you need further assistance or have any other questions, feel free to reach out!\\n\\nBest regards,\\n[Your Name]\\nAnyTicket Customer Support\\n\\nSource: [AnyTicket Knowledge Base](https://anyticket.com/knowledge-base)",
+  "sessionId": "023d0bdd-125b-40dd-b1a4-254bbabddbb5",
+  "citations": [
+    {
+      "generatedResponsePart": {
+        "textResponsePart": {
+          "span": {
+            "end": 1095,
+            "start": 0
+          },
+          "text": "Hello!\\n\\nThank you for reaching out to AnyTicket Customer Support. Regarding refunds for canceled events, here\'s what you need to know:\\n\\n**Refunds for Canceled Events:**\\n- **Official Cancellation by Organizer:** If an event is officially canceled by the organizer, AnyTicket will automatically process a refund to the original purchaser for the ticket\'s face value and associated service fees.\\n- **Reschedule Notification:** If an event is postponed or rescheduled to a new date or time, AnyTicket will notify ticket holders. Your original tickets will typically be valid for the new date. If you cannot attend the rescheduled event, AnyTicket will provide information on any available refund options or refund request windows, as determined by our policy and the event organizer.\\n\\nFor more detailed information, please review AnyTicket\\u2019s Purchase Policy at the time of your purchase.\\n\\nIf you need further assistance or have any other questions, feel free to reach out!\\n\\nBest regards,\\n[Your Name]\\nAnyTicket Customer Support\\n\\nSource: [AnyTicket Knowledge Base](https://anyticket.com/knowledge-base)"
+        }
+      },
+      "retrievedReferences": []
+    }
+  ]
+}'
