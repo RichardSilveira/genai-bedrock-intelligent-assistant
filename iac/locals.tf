@@ -5,6 +5,7 @@ locals {
 
   resource_prefix = "${var.project}-${var.environment}"
 
+  # required as other providers besides `aws` are used
   default_tags = {
     Owner            = var.owner
     CostCenter       = var.cost_center
@@ -13,6 +14,7 @@ locals {
     "user:CreatedBy" = var.created_by
   }
 
+  # required as other providers besides `aws` are used
   default_tags_list = [
     {
       key   = "Owner"
