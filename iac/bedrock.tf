@@ -14,5 +14,47 @@ module "bedrock" {
   embedding_model_dimensions      = 512
   enable_model_invocation_logging = true
   # collection_tags                 = local.default_tags_list
-  kb_tags = local.default_tags
+
+  create_guardrail = true
+  filters_config = [
+    {
+      input_strength  = "MEDIUM"
+      output_strength = "MEDIUM"
+      type            = "HATE"
+    },
+    {
+      input_strength  = "HIGH"
+      output_strength = "HIGH"
+      type            = "VIOLENCE"
+    }
+  ]
+  pii_entities_config = [
+    {
+      action = "BLOCK"
+      type   = "NAME"
+    },
+    {
+      action = "BLOCK"
+      type   = "EMAIL"
+    },
+    {
+      action = "BLOCK"
+      type   = "ADDRESS"
+    },
+  ]
+  regexes_config = [{
+    action      = "BLOCK"
+    description = "example regex"
+    name        = "regex_example"
+    pattern     = "^\\d{3}-\\d{2}-\\d{4}$"
+  }]
+  managed_word_lists_config = [{
+    type = "PROFANITY"
+  }]
+  words_config = [{
+    text = "HATE"
+  }]
+
+  kb_tags        = local.default_tags
+  guardrail_tags = local.default_tags_list
 }

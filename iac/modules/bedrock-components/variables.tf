@@ -369,7 +369,7 @@ variable "create_guardrail" {
 variable "guardrail_name" {
   description = "The name of the guardrail."
   type        = string
-  default     = "TerraformBedrockGuardrail"
+  default     = "default-guardrail"
 }
 
 variable "blocked_input_messaging" {

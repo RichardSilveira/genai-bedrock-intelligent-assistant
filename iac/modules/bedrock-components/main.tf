@@ -115,36 +115,35 @@
 
 # – Guardrail –
 
-# resource "awscc_bedrock_guardrail" "guardrail" {
-#   count                     = var.create_guardrail ? 1 : 0
-#   name                      = "${var.resource_prefix}-${var.guardrail_name}"
-#   blocked_input_messaging   = var.blocked_input_messaging
-#   blocked_outputs_messaging = var.blocked_outputs_messaging
-#   description               = var.guardrail_description
-#   content_policy_config = {
-#     filters_config = var.filters_config
-#   }
-#   sensitive_information_policy_config = {
-#     pii_entities_config = var.pii_entities_config
-#     regexes_config      = var.regexes_config
-#   }
-#   word_policy_config = {
-#     managed_word_lists_config = var.managed_word_lists_config
-#     words_config              = var.words_config
-#   }
-#   topic_policy_config = var.topics_config == null ? null : {
-#     topics_config = var.topics_config
-#   }
-#   tags        = var.guardrail_tags
-#   kms_key_arn = var.guardrail_kms_key_arn
+resource "awscc_bedrock_guardrail" "guardrail" {
+  count                     = var.create_guardrail ? 1 : 0
+  name                      = "${var.resource_prefix}-${var.guardrail_name}"
+  blocked_input_messaging   = var.blocked_input_messaging
+  blocked_outputs_messaging = var.blocked_outputs_messaging
+  description               = var.guardrail_description
+  content_policy_config = {
+    filters_config = var.filters_config
+  }
+  sensitive_information_policy_config = {
+    pii_entities_config = var.pii_entities_config
+    regexes_config      = var.regexes_config
+  }
+  word_policy_config = {
+    managed_word_lists_config = var.managed_word_lists_config
+    words_config              = var.words_config
+  }
+  topic_policy_config = var.topics_config == null ? null : {
+    topics_config = var.topics_config
+  }
+  tags        = var.guardrail_tags
+  kms_key_arn = var.guardrail_kms_key_arn
+}
 
-# }
-
-# resource "awscc_bedrock_guardrail_version" "guardrail" {
-#   count                = var.create_guardrail ? 1 : 0
-#   guardrail_identifier = awscc_bedrock_guardrail.guardrail[0].guardrail_id
-#   description          = "Guardrail version"
-# }
+resource "awscc_bedrock_guardrail_version" "guardrail" {
+  count                = var.create_guardrail ? 1 : 0
+  guardrail_identifier = awscc_bedrock_guardrail.guardrail[0].guardrail_id
+  description          = "Guardrail version"
+}
 
 # – Bedrock Flow –
 
