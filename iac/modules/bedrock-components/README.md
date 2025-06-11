@@ -222,6 +222,8 @@ No requirements.
 | [awscc_bedrock_data_source.knowledge_base_salesforce](https://registry.terraform.io/providers/hashicorp/awscc/latest/docs/resources/bedrock_data_source) | resource |
 | [awscc_bedrock_data_source.knowledge_base_sharepoint](https://registry.terraform.io/providers/hashicorp/awscc/latest/docs/resources/bedrock_data_source) | resource |
 | [awscc_bedrock_data_source.knowledge_base_web_crawler](https://registry.terraform.io/providers/hashicorp/awscc/latest/docs/resources/bedrock_data_source) | resource |
+| [awscc_bedrock_guardrail.guardrail](https://registry.terraform.io/providers/hashicorp/awscc/latest/docs/resources/bedrock_guardrail) | resource |
+| [awscc_bedrock_guardrail_version.guardrail](https://registry.terraform.io/providers/hashicorp/awscc/latest/docs/resources/bedrock_guardrail_version) | resource |
 | [awscc_bedrock_knowledge_base.knowledge_base_default](https://registry.terraform.io/providers/hashicorp/awscc/latest/docs/resources/bedrock_knowledge_base) | resource |
 | [awscc_bedrock_knowledge_base.knowledge_base_sql](https://registry.terraform.io/providers/hashicorp/awscc/latest/docs/resources/bedrock_knowledge_base) | resource |
 | [awscc_logs_delivery.knowledge_base_log_delivery](https://registry.terraform.io/providers/hashicorp/awscc/latest/docs/resources/logs_delivery) | resource |
@@ -361,7 +363,7 @@ No requirements.
 | <a name="input_graph_arn"></a> [graph\_arn](#input\_graph\_arn) | ARN for Neptune Analytics graph database. | `string` | `null` | no |
 | <a name="input_guardrail_description"></a> [guardrail\_description](#input\_guardrail\_description) | Description of the guardrail. | `string` | `null` | no |
 | <a name="input_guardrail_kms_key_arn"></a> [guardrail\_kms\_key\_arn](#input\_guardrail\_kms\_key\_arn) | KMS encryption key to use for the guardrail. | `string` | `null` | no |
-| <a name="input_guardrail_name"></a> [guardrail\_name](#input\_guardrail\_name) | The name of the guardrail. | `string` | `"TerraformBedrockGuardrail"` | no |
+| <a name="input_guardrail_name"></a> [guardrail\_name](#input\_guardrail\_name) | The name of the guardrail. | `string` | `"default-guardrail"` | no |
 | <a name="input_guardrail_tags"></a> [guardrail\_tags](#input\_guardrail\_tags) | A map of tags keys and values for the knowledge base. | `list(map(string))` | `null` | no |
 | <a name="input_heirarchical_overlap_tokens"></a> [heirarchical\_overlap\_tokens](#input\_heirarchical\_overlap\_tokens) | The number of tokens to repeat across chunks in the same layer. | `number` | `null` | no |
 | <a name="input_host_type"></a> [host\_type](#input\_host\_type) | The supported host type, whether online/cloud or server/on-premises. | `string` | `null` | no |

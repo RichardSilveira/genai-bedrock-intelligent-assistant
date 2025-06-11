@@ -79,6 +79,31 @@ To protect the chatbot from prompt injection and misuse, the prompt template fol
 - **Hallucination fallback**: Includes a fallback response when no relevant information is found in the knowledge base.
 - **Prevent over-answering**: Ensures responses are strictly limited to the content within `<KB>`.
 
+### Bedrock Guardrails (Content Safety Layer)
+
+To protect the chatbot against unsafe behavior, Amazon Bedrock Guardrails are enabled. These guardrails act like a security and compliance layer, checking for inappropriate content, personal data, or topics that are off-limits before anything is sent back to the user.
+
+This is important because users may unknowingly (or intentionally) try to misuse the chatbot, and these safeguards help maintain trust, safety, and compliance.
+
+The chatbot automatically applies the following protections:
+
+- **Inappropriate Content Filters**:
+
+  - Blocks hate speech and violent content in both questions and answers.
+
+- **Personal Information Protection**:
+
+  - Prevents the chatbot from revealing sensitive information like names, email addresses, and physical addresses.
+
+- **Sensitive Pattern Detection**:
+
+  - Blocks formats that resemble private identifiers (like Social Security numbers).
+
+- **Profanity and Harmful Language**:
+  - Uses both AWS-provided and custom keyword filters to stop unwanted or offensive words.
+
+These protections are enabled by design and enforced automatically behind the scenes. No special setup is required by the end user—they're always active to ensure a safer and more respectful experience for everyone interacting with the chatbot.
+
 ### Implementation Notes
 
 - No database is required for this implementation as session state is maintained by Amazon Bedrock
