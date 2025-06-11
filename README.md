@@ -69,6 +69,16 @@ The chatbot implements multi-turn conversation capabilities using Amazon Bedrock
    - Amazon Bedrock sessions typically expire after a period of inactivity (usually 30 minutes)
    - No explicit TTL configuration is needed for basic implementation
 
+### Secure Prompt Engineering
+
+To protect the chatbot from prompt injection and misuse, the prompt template follows best practices for secure prompt engineering:
+
+- **Prompt injection**: User input is wrapped in `<nonce>` and explicitly marked as untrusted.
+- **Data leakage (RAG output)**: Knowledge base results are wrapped in `<KB>` and marked as non-disclosable.
+- **Instruction leakage**: The template explicitly states that internal rules or behavior must not be revealed.
+- **Hallucination fallback**: Includes a fallback response when no relevant information is found in the knowledge base.
+- **Prevent over-answering**: Ensures responses are strictly limited to the content within `<KB>`.
+
 ### Implementation Notes
 
 - No database is required for this implementation as session state is maintained by Amazon Bedrock
