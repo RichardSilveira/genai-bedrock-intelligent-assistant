@@ -23,14 +23,75 @@ brew install node
 brew install rust
 ```
 
-# Lambda Chatbot Backend (Bedrock Converse)
+## Multi-turn Conversation with RAG
 
-This folder contains Python Lambda functions for the AI chatbot backend using AWS Bedrock Converse API.
+The chatbot implements multi-turn conversation capabilities using Amazon Bedrock's Knowledge Base with session management. This allows the chatbot to maintain context across multiple interactions while providing responses based on your knowledge base.
 
-## Structure
+### How It Works
+
+1. **Session-based Conversation Management**:
+
+   - Uses Amazon Bedrock's built-in session management capabilities
+   - Maintains conversation context automatically between requests
+   - No need for additional conversation tracking or state management
+
+2. **Prompt Engineering Optimization**:
+
+   - Implements strategic prompt templating to shape AI behavior and responses
+   - Defines clear agent persona boundaries for consistent brand representation
+
+3. **Inference Parameter Tuning**:
+
+   - Configures model parameters to balance creativity with factual accuracy:
+     - Temperature: 0.8 (promotes creative responses while maintaining reliability)
+     - Top-P: 0.5 (controls response diversity by limiting token selection)
+     - Max Tokens: 512 (optimizes for concise responses while ensuring completeness)
+
+4. **Request Format**:
+
+   ```json
+   {
+     "input": "Your question here",
+     "sessionId": "previous-session-id" // Optional for first request
+   }
+   ```
+
+5. **Response Format**:
+
+   ```json
+   {
+     "answer": "The model's response",
+     "sessionId": "session-id-to-use-next-time"
+   }
+   ```
+
+6. **Session Expiration**:
+   - Amazon Bedrock sessions typically expire after a period of inactivity (usually 30 minutes)
+   - No explicit TTL configuration is needed for basic implementation
+
+### Secure Prompt Engineering
+
+To protect the chatbot from prompt injection and misuse, the prompt template follows best practices for secure prompt engineering:
+
+- **Prompt injection**: User input is wrapped in `<nonce>` and explicitly marked as untrusted.
+- **Data leakage (RAG output)**: Knowledge base results are wrapped in `<KB>` and marked as non-disclosable.
+- **Instruction leakage**: The template explicitly states that internal rules or behavior must not be revealed.
+- **Hallucination fallback**: Includes a fallback response when no relevant information is found in the knowledge base.
+- **Prevent over-answering**: Ensures responses are strictly limited to the content within `<KB>`.
+
+### Implementation Notes
+
+- No database is required for this implementation as session state is maintained by Amazon Bedrock
+- The client application is responsible for storing and sending the sessionId with each request
+- Citations are included in test mode to help verify knowledge base retrieval accuracy
+
+## Lambda Chatbot Backend (Bedrock Knowledge Base)
+
+This folder contains Python Lambda functions for the AI chatbot backend using AWS Bedrock Knowledge Base.
+
+### Structure
 
 - `src/chatbot.py` — Lambda handler and logic for the chatbot
-- `scripts/build.sh` — Script to build and package Lambda(s) for deployment
 
 ## Packaging & Deployment
 
@@ -54,7 +115,8 @@ This folder contains Python Lambda functions for the AI chatbot backend using AW
 
 ## Environment Variables
 
-- `BEDROCK_KB_ID` — The Knowledge Base ID for Bedrock Converse.
+- `BEDROCK_KB_ID` — The Knowledge Base ID for Bedrock.
+- `BEDROCK_MODEL_ARN` — The ARN of the model used for knowledge base retrieval.
 
 ## Notes
 
