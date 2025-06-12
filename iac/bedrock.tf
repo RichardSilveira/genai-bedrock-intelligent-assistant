@@ -68,6 +68,7 @@ module "bedrock" {
     text = "HATE"
   }]
 
+  tags           = local.default_tags
   kb_tags        = local.default_tags
   guardrail_tags = local.default_tags_list
 }

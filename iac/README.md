@@ -68,6 +68,7 @@ The diagram below illustrates the networking components provisioned by the infra
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_agent_action_group_lambda"></a> [agent\_action\_group\_lambda](#module\_agent\_action\_group\_lambda) | ./modules/lambda | n/a |
 | <a name="module_authorizer_lambda"></a> [authorizer\_lambda](#module\_authorizer\_lambda) | ./modules/lambda | n/a |
 | <a name="module_bedrock"></a> [bedrock](#module\_bedrock) | ./modules/bedrock-components | n/a |
 | <a name="module_chatbot_lambda"></a> [chatbot\_lambda](#module\_chatbot\_lambda) | ./modules/lambda | n/a |
@@ -96,6 +97,7 @@ The diagram below illustrates the networking components provisioned by the infra
 | [aws_wafv2_web_acl_logging_configuration.waf_logging](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_web_acl_logging_configuration) | resource |
 | [random_password.api_key](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [random_password.cloudfront_secret](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
+| [archive_file.agent_action_group_lambda](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |
 | [archive_file.authorizer_lambda](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |
 | [archive_file.chatbot_lambda](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |

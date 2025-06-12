@@ -8,10 +8,10 @@ resource "time_sleep" "wait_for_inference_profile" {
 }
 
 resource "awscc_bedrock_agent" "bedrock_agent" {
-  count      = var.create_agent ? 1 : 0
-  agent_name = "${var.resource_prefix}-${var.agent_name}"
-  # foundation_model = var.create_app_inference_profile ? awscc_bedrock_application_inference_profile.application_inference_profile[0].inference_profile_arn : var.foundation_model
-  foundation_model            = var.foundation_model
+  count            = var.create_agent ? 1 : 0
+  agent_name       = "${var.resource_prefix}-${var.agent_name}"
+  foundation_model = var.create_app_inference_profile ? awscc_bedrock_application_inference_profile.application_inference_profile[0].inference_profile_arn : var.foundation_model
+  # foundation_model            = var.foundation_model
   instruction                 = var.instruction
   description                 = var.agent_description
   idle_session_ttl_in_seconds = var.idle_session_ttl
