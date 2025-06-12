@@ -1,149 +1,171 @@
-# Production-Ready Generative AI chatbot using AWS Bedrock & RAG
+# AnyTicket GenAI Chatbot – AWS Bedrock & RAG (Production-Ready Portfolio)
 
-A Generative AI intelligent assistant using AWS Bedrock & RAG, built applying production-ready principles with its infrastructure managed via IaC (Infrastructure as Code). It enables contextual Q&A from diverse data sources (unstructured/structured). A portfolio project demonstrating robust GenAI application development on AWS.
+Welcome to the **AnyTicket AI Support Assistant** project—a robust, production-grade Generative AI solution built on AWS Bedrock and Retrieval-Augmented Generation (RAG). This project demonstrates advanced cloud architecture, secure infrastructure-as-code (IaC), and real-world GenAI application development for the event ticketing domain.
 
-## Developer Setup
+---
 
-To contribute to this project, ensure the following tools are installed on your machine:
+## 🚀 Executive Summary
 
-### System Requirements
+- **Business Value:**
+  - 24/7 intelligent customer support for event ticketing, reducing operational costs and improving customer satisfaction.
+  - Secure, scalable, and compliant by design—ready for real-world enterprise workloads.
+- **Solution Highlights:**
+  - Modern GenAI patterns, multi-turn conversation, and contextual Q&A from unstructured data.
+  - End-to-end security, observability, and automation using AWS best practices.
 
-- [Terraform](https://developer.hashicorp.com/terraform/install)
-- [terraform-docs](https://terraform-docs.io/user-guide/installation/)
-- [Python 3.11+](https://www.python.org/downloads/)
-- [Node.js 18+ and npm](https://nodejs.org/)
+---
 
-### Installation Steps (macOS example)
+## 🏗️ Solution Overview
 
-```bash
-brew install terraform
-brew install terraform-docs
-brew install python
-brew install node
-brew install rust
-```
+- **Domain:** Event ticketing (AnyTicket)
+- **Use Case:** AI-powered, multi-turn customer support chatbot
+- **Cloud Platform:** AWS (Bedrock, Lambda, API Gateway, CloudFront, WAF, VPC, S3, IAM, etc.)
+- **IaC:** 100% managed via Terraform (modular, reusable, and production-ready)
+- **Frontend:** Minimal Streamlit demo for API showcase (decoupled from backend)
 
-## Multi-turn Conversation with RAG
+---
 
-The chatbot implements multi-turn conversation capabilities using Amazon Bedrock's Knowledge Base with session management. This allows the chatbot to maintain context across multiple interactions while providing responses based on your knowledge base.
+## 🌟 Key Differentiators
 
-### How It Works
+- **Production-Ready by Design:**
+  - Security, scalability, and compliance are built-in—not afterthoughts.
+  - Automated deployment, monitoring, and guardrails for safe GenAI adoption.
+- **AWS Well-Architected Framework Alignment:**
+  - [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/) principles:
+    - **Operational Excellence:** Logging and monitoring.
+    - **Security:** WAF, API keys, IAM least privilege, Bedrock Guardrails, prompt injection protection.
+    - **Reliability:** Multi-AZ VPC, reserved Lambda concurrency, API Gateway throttling.
+    - **Performance Efficiency:** Serverless, auto-scaling, and global CDN (CloudFront).
+    - **Cost Optimization:** Pay-as-you-go, no idle resources, and efficient resource sizing.
+- **Real-World Patterns:**
+  - Multi-turn conversation, session management, secure prompt engineering, and content safety.
+  - Modular IaC for rapid adaptation to new domains or data sources.
 
-1. **Session-based Conversation Management**:
+---
 
-   - Uses Amazon Bedrock's built-in session management capabilities
-   - Maintains conversation context automatically between requests
-   - No need for additional conversation tracking or state management
+## 🛡️ Security & Compliance Highlights
 
-2. **Prompt Engineering Optimization**:
+- **Defense-in-Depth:**
+  - AWS WAF, CloudFront, and API Gateway for layered protection.
+  - Lambda authorizer for API key validation and origin verification.
+  - Bedrock Guardrails for content safety and compliance.
+- **Data Privacy:**
+  - No PII leakage—prompt template and RAG output are strictly controlled.
+  - All secrets managed via environment variables and SSM Parameter Store.
+- **Audit & Observability:**
+  - CloudWatch logging for API, Lambda, and WAF events.
+  - Modular observability stack for production monitoring.
 
-   - Implements strategic prompt templating to shape AI behavior and responses
-   - Defines clear agent persona boundaries for consistent brand representation
+---
 
-3. **Inference Parameter Tuning**:
+## 🧩 Architecture Diagram
 
-   - Configures model parameters to balance creativity with factual accuracy:
-     - Temperature: 0.8 (promotes creative responses while maintaining reliability)
-     - Top-P: 0.5 (controls response diversity by limiting token selection)
-     - Max Tokens: 512 (optimizes for concise responses while ensuring completeness)
+See [`iac/README.md`](iac/README.md) for detailed architecture diagrams:
 
-4. **Request Format**:
+- API Communication & Security
+- Networking & VPC
 
-   ```json
-   {
-     "input": "Your question here",
-     "sessionId": "previous-session-id" // Optional for first request
-   }
-   ```
+---
 
-5. **Response Format**:
+## 🛠️ High-Level Architecture
 
-   ```json
-   {
-     "answer": "The model's response",
-     "sessionId": "session-id-to-use-next-time"
-   }
-   ```
+- **Frontend:** Streamlit demo (for portfolio/demo only)
+- **API Layer:**
+  - Amazon API Gateway (HTTP API, Lambda Proxy integration)
+  - Custom Lambda Authorizer (API key & origin verification)
+- **Application Logic:**
+  - AWS Lambda (Python, Bedrock Knowledge Base integration)
+  - Bedrock RAG with secure prompt engineering
+- **Data & Knowledge Base:**
+  - Bedrock Knowledge Base (S3, Pinecone, OpenSearch, etc. supported)
+  - No database required for session state (handled by Bedrock)
+- **Networking & Security:**
+  - VPC, private subnets, NAT Gateway, security groups
+  - AWS WAF, CloudFront (global CDN, DDoS protection)
+- **Observability:**
+  - CloudWatch logs, metrics, and alarms
+- **IaC:**
+  - Modular Terraform (see `iac/` and submodules)
 
-6. **Session Expiration**:
-   - Amazon Bedrock sessions typically expire after a period of inactivity (usually 30 minutes)
-   - No explicit TTL configuration is needed for basic implementation
+---
 
-### Secure Prompt Engineering
+## 📦 Project Structure
 
-To protect the chatbot from prompt injection and misuse, the prompt template follows best practices for secure prompt engineering:
+- `src/` — Lambda source code (chatbot, authorizer)
+- `iac/` — Infrastructure as Code (Terraform modules, diagrams, docs)
+- `streamlit_demo/` — Minimal frontend for API demo
+- `tests/` — Unit and integration tests
 
-- **Prompt injection**: User input is wrapped in `<nonce>` and explicitly marked as untrusted.
-- **Data leakage (RAG output)**: Knowledge base results are wrapped in `<KB>` and marked as non-disclosable.
-- **Instruction leakage**: The template explicitly states that internal rules or behavior must not be revealed.
-- **Hallucination fallback**: Includes a fallback response when no relevant information is found in the knowledge base.
-- **Prevent over-answering**: Ensures responses are strictly limited to the content within `<KB>`.
+---
 
-### Bedrock Guardrails (Content Safety Layer)
+## 📝 Key Features & Implementation Details
 
-To protect the chatbot against unsafe behavior, Amazon Bedrock Guardrails are enabled. These guardrails act like a security and compliance layer, checking for inappropriate content, personal data, or topics that are off-limits before anything is sent back to the user.
+- **Multi-turn Conversation:**
+  - Session management via Bedrock (no DB required)
+- **Prompt Security:**
+  - User input wrapped in `<nonce>`, RAG output in `<KB>`
+  - Prevents prompt injection and data leakage
+- **Content Safety:**
+  - Bedrock Guardrails, WAF, and profanity filters
+- **API Security:**
+  - API key, origin verification, and Lambda authorizer
+- **IaC Best Practices:**
+  - Modular, reusable, and environment-agnostic
+- **Observability:**
+  - CloudWatch logs for API, Lambda, and WAF
 
-This is important because users may unknowingly (or intentionally) try to misuse the chatbot, and these safeguards help maintain trust, safety, and compliance.
+---
 
-The chatbot automatically applies the following protections:
+## 👩‍💻 Technical Deep Dive
 
-- **Inappropriate Content Filters**:
+- **Terraform modules** for Bedrock, Lambda, API Gateway, WAF, VPC, and more
+- **Production patterns:**
+  - Lambda reserved concurrency, API throttling, VPC isolation
+  - Secure environment variable and secret management
+- **Extensible:**
+  - Add new data sources, models, or domains with minimal changes
+- **Testing:**
+  - Unit and integration tests for backend logic
 
-  - Blocks hate speech and violent content in both questions and answers.
+---
 
-- **Personal Information Protection**:
+## 📈 Business & Domain Impact
 
-  - Prevents the chatbot from revealing sensitive information like names, email addresses, and physical addresses.
+- **GenAI for Customer Support:**
+  - Automates and enhances customer support for event ticketing
+  - Reduces support costs, improves response times, and scales with demand
+- **Modern Cloud Skills:**
+  - Demonstrates AWS, GenAI, and security best practices
+  - IaC, serverless, and production-readiness
+- **Compliance & Trust:**
+  - Built-in guardrails for privacy, safety, and regulatory needs
 
-- **Sensitive Pattern Detection**:
+---
 
-  - Blocks formats that resemble private identifiers (like Social Security numbers).
+## 📚 Further Reading & Diagrams
 
-- **Profanity and Harmful Language**:
-  - Uses both AWS-provided and custom keyword filters to stop unwanted or offensive words.
+- See [`iac/README.md`](iac/README.md) for deep dives into:
+  - API security architecture
+  - Networking and VPC design
+  - Terraform module documentation
+- [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
 
-These protections are enabled by design and enforced automatically behind the scenes. No special setup is required by the end user—they're always active to ensure a safer and more respectful experience for everyone interacting with the chatbot.
+---
 
-### Implementation Notes
+## 🏁 Quickstart & Developer Setup
 
-- No database is required for this implementation as session state is maintained by Amazon Bedrock
-- The client application is responsible for storing and sending the sessionId with each request
-- Citations are included in test mode to help verify knowledge base retrieval accuracy
+1. **Install prerequisites:**
+   - Terraform, terraform-docs, Python 3.11+, Node.js 18+, Rust
+2. **Clone the repo & set up environment variables**
+3. **Build & deploy infrastructure:**
+   - See `iac/README.md` for details
+4. **Run the Streamlit demo:**
+   - See `streamlit_demo/README.md` (if present)
 
-## Lambda Chatbot Backend (Bedrock Knowledge Base)
+---
 
-This folder contains Python Lambda functions for the AI chatbot backend using AWS Bedrock Knowledge Base.
+## 📝 Notes
 
-### Structure
-
-- `src/chatbot.py` — Lambda handler and logic for the chatbot
-
-## Packaging & Deployment
-
-1. **Build the Lambda package:**
-
-   ```zsh
-   cd scripts
-   chmod +x build.sh
-   ./build.sh chatbot
-   ```
-
-   This creates `dist/chatbot.zip` ready for upload (e.g., to S3 for Terraform).
-
-2. **Terraform Integration:**
-
-   - Upload `chatbot.zip` to S3 (manually or via CI/CD pipeline).
-   - Reference the S3 object in your `aws_lambda_function` resource in Terraform.
-
-3. **API Gateway Integration:**
-   - Use Lambda Proxy integration for flexible request/response handling.
-
-## Environment Variables
-
-- `BEDROCK_KB_ID` — The Knowledge Base ID for Bedrock.
-- `BEDROCK_MODEL_ARN` — The ARN of the model used for knowledge base retrieval.
-
-## Notes
-
-- Use [AWS Lambda Powertools](https://awslabs.github.io/aws-lambda-powertools-python/latest/) for logging, metrics, and tracing in production.
-- Update `requirements.txt` as needed for additional dependencies.
+- Uses [AWS Lambda Powertools](https://awslabs.github.io/aws-lambda-powertools-python/latest/) for logging, metrics, and tracing
+- All code and infra are production-ready and modular for real-world use
+- For questions or collaboration, please reach out!
