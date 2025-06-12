@@ -1,22 +1,21 @@
+resource "aws_iam_role" "agent_role" {
+  count                = var.agent_resource_role_arn == null && (var.create_agent || var.create_supervisor) ? 1 : 0
+  assume_role_policy   = data.aws_iam_policy_document.agent_trust[0].json
+  name_prefix          = var.name_prefix
+  permissions_boundary = var.permissions_boundary_arn
+}
 
-# resource "aws_iam_role" "agent_role" {
-#   count                = var.agent_resource_role_arn == null && (var.create_agent || var.create_supervisor) ? 1 : 0
-#   assume_role_policy   = data.aws_iam_policy_document.agent_trust[0].json
-#   name_prefix          = var.name_prefix
-#   permissions_boundary = var.permissions_boundary_arn
-# }
+resource "aws_iam_role_policy" "agent_policy" {
+  count  = var.agent_resource_role_arn == null && (var.create_agent || var.create_supervisor) ? 1 : 0
+  policy = data.aws_iam_policy_document.agent_permissions[0].json
+  role   = local.agent_role_name
+}
 
-# resource "aws_iam_role_policy" "agent_policy" {
-#   count  = var.agent_resource_role_arn == null && (var.create_agent || var.create_supervisor) ? 1 : 0
-#   policy = data.aws_iam_policy_document.agent_permissions[0].json
-#   role   = local.agent_role_name
-# }
-
-# resource "aws_iam_role_policy" "agent_alias_policy" {
-#   count  = var.agent_resource_role_arn == null && (var.create_agent_alias || var.create_supervisor) ? 1 : 0
-#   policy = data.aws_iam_policy_document.agent_alias_permissions[0].json
-#   role   = local.agent_role_name
-# }
+resource "aws_iam_role_policy" "agent_alias_policy" {
+  count  = var.agent_resource_role_arn == null && (var.create_agent_alias || var.create_supervisor) ? 1 : 0
+  policy = data.aws_iam_policy_document.agent_alias_permissions[0].json
+  role   = local.agent_role_name
+}
 
 # resource "aws_iam_role_policy" "kb_policy" {
 #   count  = var.agent_resource_role_arn == null && local.create_kb && var.create_agent ? 1 : 0
@@ -238,28 +237,29 @@ resource "aws_iam_role_policy" "bedrock_kb_oss" {
 
 # Action Group Policies
 
-# resource "aws_lambda_permission" "allow_bedrock_agent" {
-#   count         = var.create_ag ? length(local.action_group_names) : 0
-#   action        = "lambda:InvokeFunction"
-#   function_name = local.action_group_names[count.index]
-#   principal     = "bedrock.amazonaws.com"
-#   source_arn    = awscc_bedrock_agent.bedrock_agent[0].agent_arn
-# }
+resource "aws_lambda_permission" "allow_bedrock_agent" {
+  count         = var.create_ag ? 1 : 0
+  action        = "lambda:InvokeFunction"
+  function_name = var.lambda_action_group_executor
+  principal     = "bedrock.amazonaws.com"
+  # Optionally restrict to the agent ARN:
+  # source_arn    = awscc_bedrock_agent.bedrock_agent[0].agent_arn
+}
 
-# resource "aws_iam_role_policy" "action_group_policy" {
-#   count = var.create_ag ? 1 : 0
-#   policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Effect   = "Allow"
-#         Action   = "lambda:InvokeModel"
-#         Resource = concat([var.lambda_action_group_executor], var.action_group_lambda_arns_list)
-#       }
-#     ]
-#   })
-#   role = aws_iam_role.agent_role[0].id
-# }
+resource "aws_iam_role_policy" "action_group_policy" {
+  count = var.create_ag ? 1 : 0
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = "lambda:InvokeFunction"
+        Resource = "*"
+      }
+    ]
+  })
+  role = aws_iam_role.agent_role[0].id
+}
 
 # Application Inference Profile Policies
 
