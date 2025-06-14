@@ -27,9 +27,7 @@ data "aws_iam_policy_document" "agent_permissions" {
   count = var.create_agent || var.create_supervisor ? 1 : 0
   statement {
     actions = [
-      "bedrock:*",
-      # "bedrock:InvokeModel*",
-      # "bedrock:UseInferenceProfile",
+      "bedrock:*"
     ]
     resources = ["*"]
   }
@@ -39,13 +37,10 @@ data "aws_iam_policy_document" "agent_alias_permissions" {
   count = var.create_agent_alias || var.create_supervisor ? 1 : 0
   statement {
     actions = [
-      "bedrock:*",
-      # "bedrock:GetAgentAlias",
-      # "bedrock:InvokeAgent"
+      "bedrock:*"
     ]
     resources = [
-      "arn:${local.partition}:bedrock:${local.region}:${local.account_id}:agent/*",
-      "arn:${local.partition}:bedrock:${local.region}:${local.account_id}:agent-alias/*"
+      "*"
     ]
   }
 }

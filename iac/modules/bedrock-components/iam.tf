@@ -1,4 +1,3 @@
-
 resource "aws_iam_role" "agent_role" {
   count                = var.agent_resource_role_arn == null && (var.create_agent || var.create_supervisor) ? 1 : 0
   name                 = "AmazonBedrockExecutionRoleForAgents-${var.resource_prefix}"
@@ -246,6 +245,14 @@ resource "aws_lambda_permission" "allow_bedrock_agent" {
   source_arn    = awscc_bedrock_agent.bedrock_agent[0].agent_arn
 }
 
+resource "aws_lambda_permission" "allow_bedrock_agent_alias" {
+  count         = var.create_ag ? length(local.action_group_names) : 0
+  action        = "lambda:InvokeFunction"
+  function_name = local.action_group_names[count.index]
+  principal     = "bedrock.amazonaws.com"
+  source_arn    = "${awscc_bedrock_agent.bedrock_agent[0].agent_arn}/*"
+}
+
 resource "aws_iam_role_policy" "action_group_policy" {
   count = var.create_ag ? 1 : 0
   policy = jsonencode({
@@ -253,7 +260,7 @@ resource "aws_iam_role_policy" "action_group_policy" {
     Statement = [
       {
         Effect   = "Allow"
-        Action   = "lambda:InvokeModel"
+        Action   = ["lambda:InvokeModel*"]
         Resource = concat([var.lambda_action_group_executor], var.action_group_lambda_arns_list)
       }
     ]

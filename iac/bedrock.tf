@@ -7,8 +7,8 @@ module "bedrock" {
   kb_storage_type                 = var.kb_storage_type
   connection_string               = var.pinecone_connection_string
   credentials_secret_arn          = "arn:aws:secretsmanager:us-east-1:103881053461:secret:chatbot/dev/pinecone-api-CByFFV"
-  create_agent                    = true
-  create_ag                       = true
+  create_agent                    = local.create_agent
+  create_ag                       = local.create_agent
   create_s3_data_source           = true
   s3_inclusion_prefixes           = ["documents"]
   kb_embedding_model_arn          = "arn:aws:bedrock:${data.aws_region.current.name}::foundation-model/amazon.titan-embed-text-v2:0"
@@ -19,9 +19,9 @@ module "bedrock" {
   agent_name                   = "AnyTicketAgent"
   agent_alias_name             = "AnyTicketAgent"
   agent_description            = "Agent for AnyTicket customer support, using knowledge base and action group for event lookup."
-  create_agent_alias           = true
+  create_agent_alias           = local.create_agent
   instruction                  = "You are a helpful, secure, and friendly customer support agent for AnyTicket, a ticket service for events. Use the knowledge base and available actions to answer user questions."
-  foundation_model             = "anthropic.claude-instant-v1"
+  foundation_model             = "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
   action_group_name            = "available-events-action-group"
   action_group_description     = "Action group to get available events for a given date and city."
   action_group_state           = "ENABLED"
@@ -68,7 +68,8 @@ module "bedrock" {
     text = "HATE"
   }]
 
-  tags           = local.default_tags
-  kb_tags        = local.default_tags
-  guardrail_tags = local.default_tags_list
+  tags             = local.default_tags
+  agent_alias_tags = local.default_tags
+  kb_tags          = local.default_tags
+  guardrail_tags   = local.default_tags_list
 }

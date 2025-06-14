@@ -18,15 +18,15 @@ output "cloudwatch_log_group" {
   description = "The name of the CloudWatch log group for the knowledge base.  If no log group was requested, value will be null"
 }
 
-# output "bedrock_agent" {
-#   value       = var.create_agent == true ? awscc_bedrock_agent.bedrock_agent : null
-#   description = "The Amazon Bedrock Agent if it is created."
-# }
+output "bedrock_agent" {
+  value       = var.create_agent == true ? awscc_bedrock_agent.bedrock_agent : null
+  description = "The Amazon Bedrock Agent if it is created."
+}
 
-# output "bedrock_agent_alias" {
-#   value       = var.create_agent_alias == true ? (var.use_aws_provider_alias ? aws_bedrockagent_agent_alias.bedrock_agent_alias : awscc_bedrock_agent_alias.bedrock_agent_alias) : null
-#   description = "The Amazon Bedrock Agent Alias if it is created."
-# }
+output "bedrock_agent_alias" {
+  value       = var.create_agent_alias == true ? (var.use_aws_provider_alias ? aws_bedrockagent_agent_alias.bedrock_agent_alias : awscc_bedrock_agent_alias.bedrock_agent_alias) : null
+  description = "The Amazon Bedrock Agent Alias if it is created."
+}
 
 output "s3_data_source_arn" {
   value       = var.kb_s3_data_source != null ? var.kb_s3_data_source : var.create_default_kb ? length(module.kb_data_source_bucket) > 0 ? module.kb_data_source_bucket[0].bucket_arn : null : null
@@ -78,3 +78,13 @@ output "knowledge_base_role_name" {
 #   description = "The ARN of the application inference profile."
 #   value       = var.create_app_inference_profile ? awscc_bedrock_application_inference_profile.application_inference_profile[0].inference_profile_arn : null
 # }
+
+output "bedrock_agent_id" {
+  value       = var.create_agent == true && length(awscc_bedrock_agent.bedrock_agent) > 0 ? awscc_bedrock_agent.bedrock_agent[0].agent_id : null
+  description = "The unique identifier of the Bedrock Agent."
+}
+
+output "bedrock_agent_alias_id" {
+  value       = var.create_agent_alias == true && length(awscc_bedrock_agent_alias.bedrock_agent_alias) > 0 ? awscc_bedrock_agent_alias.bedrock_agent_alias[0].agent_alias_id : null
+  description = "The unique identifier of the Bedrock Agent Alias."
+}

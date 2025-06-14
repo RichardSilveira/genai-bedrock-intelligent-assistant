@@ -40,11 +40,10 @@ module "chatbot_lambda" {
     {
       Effect = "Allow"
       Action = [
-        "bedrock:InvokeModel",
+        "bedrock:InvokeModel*",
         "bedrock:Retrieve",
         "bedrock:RetrieveAndGenerate",
         "bedrock:GetInferenceProfile",
-        "bedrock-agent-runtime:RetrieveAndGenerate"
       ]
       Resource = [
         "*"
@@ -92,15 +91,12 @@ module "agent_action_group_lambda" {
     {
       Effect = "Allow"
       Action = [
-        "bedrock:InvokeModel",
+        "bedrock:InvokeModel*",
         "bedrock:Retrieve",
         "bedrock:RetrieveAndGenerate",
         "bedrock:GetInferenceProfile",
-        "bedrock-agent-runtime:RetrieveAndGenerate"
       ]
-      Resource = [
-        "*"
-      ]
+      Resource = local.base_fundation_model_resources
     }
   ]
 }
