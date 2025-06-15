@@ -224,6 +224,7 @@ No requirements.
 | [aws_iam_role_policy_attachment.bedrock_knowledge_base_sql_provision_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.bedrock_knowledge_base_sql_serverless_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_lambda_permission.allow_bedrock_agent](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
+| [aws_lambda_permission.allow_bedrock_agent_alias](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
 | [aws_opensearchserverless_access_policy.updated_data_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/opensearchserverless_access_policy) | resource |
 | [awscc_bedrock_agent.bedrock_agent](https://registry.terraform.io/providers/hashicorp/awscc/latest/docs/resources/bedrock_agent) | resource |
 | [awscc_bedrock_agent_alias.bedrock_agent_alias](https://registry.terraform.io/providers/hashicorp/awscc/latest/docs/resources/bedrock_agent_alias) | resource |
@@ -502,6 +503,10 @@ No requirements.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_bedrock_agent"></a> [bedrock\_agent](#output\_bedrock\_agent) | The Amazon Bedrock Agent if it is created. |
+| <a name="output_bedrock_agent_alias"></a> [bedrock\_agent\_alias](#output\_bedrock\_agent\_alias) | The Amazon Bedrock Agent Alias if it is created. |
+| <a name="output_bedrock_agent_alias_id"></a> [bedrock\_agent\_alias\_id](#output\_bedrock\_agent\_alias\_id) | The unique identifier of the Bedrock Agent Alias. |
+| <a name="output_bedrock_agent_id"></a> [bedrock\_agent\_id](#output\_bedrock\_agent\_id) | The unique identifier of the Bedrock Agent. |
 | <a name="output_cloudwatch_log_group"></a> [cloudwatch\_log\_group](#output\_cloudwatch\_log\_group) | The name of the CloudWatch log group for the knowledge base.  If no log group was requested, value will be null |
 | <a name="output_datasource_identifier"></a> [datasource\_identifier](#output\_datasource\_identifier) | The unique identifier of the data source. |
 | <a name="output_default_collection"></a> [default\_collection](#output\_default\_collection) | Opensearch default collection value. |

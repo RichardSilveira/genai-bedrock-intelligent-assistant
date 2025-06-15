@@ -69,6 +69,7 @@ The diagram below illustrates the networking components provisioned by the infra
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_agent_action_group_lambda"></a> [agent\_action\_group\_lambda](#module\_agent\_action\_group\_lambda) | ./modules/lambda | n/a |
+| <a name="module_agent_entrypoint_lambda"></a> [agent\_entrypoint\_lambda](#module\_agent\_entrypoint\_lambda) | ./modules/lambda | n/a |
 | <a name="module_authorizer_lambda"></a> [authorizer\_lambda](#module\_authorizer\_lambda) | ./modules/lambda | n/a |
 | <a name="module_bedrock"></a> [bedrock](#module\_bedrock) | ./modules/bedrock-components | n/a |
 | <a name="module_chatbot_lambda"></a> [chatbot\_lambda](#module\_chatbot\_lambda) | ./modules/lambda | n/a |
@@ -81,13 +82,17 @@ The diagram below illustrates the networking components provisioned by the infra
 |------|------|
 | [aws_apigatewayv2_api.chatbot_api](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_api) | resource |
 | [aws_apigatewayv2_authorizer.api_key_authorizer](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_authorizer) | resource |
+| [aws_apigatewayv2_integration.agent_entrypoint_lambda_integration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_integration) | resource |
 | [aws_apigatewayv2_integration.chatbot_lambda_integration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_integration) | resource |
+| [aws_apigatewayv2_route.agent_options_route](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_route) | resource |
+| [aws_apigatewayv2_route.agent_post_route](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_route) | resource |
 | [aws_apigatewayv2_route.chatbot_options_route](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_route) | resource |
 | [aws_apigatewayv2_route.chatbot_post_route](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_route) | resource |
 | [aws_apigatewayv2_stage.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_stage) | resource |
 | [aws_cloudfront_distribution.api_distribution](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudfront_distribution) | resource |
 | [aws_cloudwatch_log_group.api_logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_cloudwatch_log_group.waf_logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
+| [aws_lambda_permission.api_gateway_agent_lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
 | [aws_lambda_permission.api_gateway_auth_lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
 | [aws_lambda_permission.api_gateway_lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
 | [aws_security_group.lambda_sg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
@@ -98,6 +103,7 @@ The diagram below illustrates the networking components provisioned by the infra
 | [random_password.api_key](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [random_password.cloudfront_secret](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [archive_file.agent_action_group_lambda](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |
+| [archive_file.agent_entrypoint_lambda](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |
 | [archive_file.authorizer_lambda](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |
 | [archive_file.chatbot_lambda](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
