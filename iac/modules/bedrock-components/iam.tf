@@ -1,22 +1,21 @@
+resource "aws_iam_role" "agent_role" {
+  count                = var.agent_resource_role_arn == null && (var.create_agent || var.create_supervisor) ? 1 : 0
+  name                 = "AmazonBedrockExecutionRoleForAgents-${var.resource_prefix}"
+  assume_role_policy   = data.aws_iam_policy_document.agent_trust[0].json
+  permissions_boundary = var.permissions_boundary_arn
+}
 
-# resource "aws_iam_role" "agent_role" {
-#   count                = var.agent_resource_role_arn == null && (var.create_agent || var.create_supervisor) ? 1 : 0
-#   assume_role_policy   = data.aws_iam_policy_document.agent_trust[0].json
-#   name_prefix          = var.name_prefix
-#   permissions_boundary = var.permissions_boundary_arn
-# }
+resource "aws_iam_role_policy" "agent_policy" {
+  count  = var.agent_resource_role_arn == null && (var.create_agent || var.create_supervisor) ? 1 : 0
+  policy = data.aws_iam_policy_document.agent_permissions[0].json
+  role   = local.agent_role_name
+}
 
-# resource "aws_iam_role_policy" "agent_policy" {
-#   count  = var.agent_resource_role_arn == null && (var.create_agent || var.create_supervisor) ? 1 : 0
-#   policy = data.aws_iam_policy_document.agent_permissions[0].json
-#   role   = local.agent_role_name
-# }
-
-# resource "aws_iam_role_policy" "agent_alias_policy" {
-#   count  = var.agent_resource_role_arn == null && (var.create_agent_alias || var.create_supervisor) ? 1 : 0
-#   policy = data.aws_iam_policy_document.agent_alias_permissions[0].json
-#   role   = local.agent_role_name
-# }
+resource "aws_iam_role_policy" "agent_alias_policy" {
+  count  = var.agent_resource_role_arn == null && (var.create_agent_alias || var.create_supervisor) ? 1 : 0
+  policy = data.aws_iam_policy_document.agent_alias_permissions[0].json
+  role   = local.agent_role_name
+}
 
 # resource "aws_iam_role_policy" "kb_policy" {
 #   count  = var.agent_resource_role_arn == null && local.create_kb && var.create_agent ? 1 : 0
@@ -238,87 +237,95 @@ resource "aws_iam_role_policy" "bedrock_kb_oss" {
 
 # Action Group Policies
 
-# resource "aws_lambda_permission" "allow_bedrock_agent" {
-#   count         = var.create_ag ? length(local.action_group_names) : 0
-#   action        = "lambda:InvokeFunction"
-#   function_name = local.action_group_names[count.index]
-#   principal     = "bedrock.amazonaws.com"
-#   source_arn    = awscc_bedrock_agent.bedrock_agent[0].agent_arn
-# }
+resource "aws_lambda_permission" "allow_bedrock_agent" {
+  count         = var.create_ag ? length(local.action_group_names) : 0
+  action        = "lambda:InvokeFunction"
+  function_name = local.action_group_names[count.index]
+  principal     = "bedrock.amazonaws.com"
+  source_arn    = awscc_bedrock_agent.bedrock_agent[0].agent_arn
+}
 
-# resource "aws_iam_role_policy" "action_group_policy" {
-#   count = var.create_ag ? 1 : 0
-#   policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Effect   = "Allow"
-#         Action   = "lambda:InvokeModel"
-#         Resource = concat([var.lambda_action_group_executor], var.action_group_lambda_arns_list)
-#       }
-#     ]
-#   })
-#   role = aws_iam_role.agent_role[0].id
-# }
+resource "aws_lambda_permission" "allow_bedrock_agent_alias" {
+  count         = var.create_ag ? length(local.action_group_names) : 0
+  action        = "lambda:InvokeFunction"
+  function_name = local.action_group_names[count.index]
+  principal     = "bedrock.amazonaws.com"
+  source_arn    = "${awscc_bedrock_agent.bedrock_agent[0].agent_arn}/*"
+}
+
+resource "aws_iam_role_policy" "action_group_policy" {
+  count = var.create_ag ? 1 : 0
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["lambda:InvokeModel*"]
+        Resource = concat([var.lambda_action_group_executor], var.action_group_lambda_arns_list)
+      }
+    ]
+  })
+  role = aws_iam_role.agent_role[0].id
+}
 
 # Application Inference Profile Policies
 
 # Define the IAM role for Application Inference Profile
-# resource "aws_iam_role" "application_inference_profile_role" {
-#   count = var.create_app_inference_profile ? 1 : 0
-#   name  = "ApplicationInferenceProfile-${var.resource_prefix}"
+resource "aws_iam_role" "application_inference_profile_role" {
+  count = var.create_app_inference_profile ? 1 : 0
+  name  = "ApplicationInferenceProfile-${var.resource_prefix}"
 
-#   assume_role_policy = jsonencode({
-#     "Version" : "2012-10-17",
-#     "Statement" : [
-#       {
-#         "Effect" : "Allow",
-#         "Principal" : {
-#           "Service" : "bedrock.amazonaws.com"
-#         },
-#         "Action" : "sts:AssumeRole"
-#       }
-#     ]
-#   })
-#   permissions_boundary = var.permissions_boundary_arn
-# }
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : "bedrock.amazonaws.com"
+        },
+        "Action" : "sts:AssumeRole"
+      }
+    ]
+  })
+  permissions_boundary = var.permissions_boundary_arn
+}
 
-# resource "aws_iam_role_policy" "app_inference_profile_role_policy" {
-#   count = var.create_app_inference_profile ? 1 : 0
-#   policy = jsonencode({
-#     "Version" : "2012-10-17",
-#     "Statement" : [
-#       {
-#         "Effect" : "Allow",
-#         "Action" : [
-#           "bedrock:InvokeModel*",
-#           "bedrock:CreateInferenceProfile"
-#         ],
-#         "Resource" : [
-#           "arn:aws:bedrock:*::foundation-model/*",
-#           "arn:aws:bedrock:*:*:inference-profile/*",
-#           "arn:aws:bedrock:*:*:application-inference-profile/*"
-#         ]
-#       },
-#       {
-#         "Effect" : "Allow",
-#         "Action" : [
-#           "bedrock:GetInferenceProfile",
-#           "bedrock:ListInferenceProfiles",
-#           "bedrock:DeleteInferenceProfile",
-#           "bedrock:TagResource",
-#           "bedrock:UntagResource",
-#           "bedrock:ListTagsForResource"
-#         ],
-#         "Resource" : [
-#           "arn:aws:bedrock:*:*:inference-profile/*",
-#           "arn:aws:bedrock:*:*:application-inference-profile/*"
-#         ]
-#       }
-#     ]
-#   })
-#   role = aws_iam_role.application_inference_profile_role[0].id
-# }
+resource "aws_iam_role_policy" "app_inference_profile_role_policy" {
+  count = var.create_app_inference_profile ? 1 : 0
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "bedrock:InvokeModel*",
+          "bedrock:CreateInferenceProfile"
+        ],
+        "Resource" : [
+          "arn:aws:bedrock:*::foundation-model/*",
+          "arn:aws:bedrock:*:*:inference-profile/*",
+          "arn:aws:bedrock:*:*:application-inference-profile/*"
+        ]
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "bedrock:GetInferenceProfile",
+          "bedrock:ListInferenceProfiles",
+          "bedrock:DeleteInferenceProfile",
+          "bedrock:TagResource",
+          "bedrock:UntagResource",
+          "bedrock:ListTagsForResource"
+        ],
+        "Resource" : [
+          "arn:aws:bedrock:*:*:inference-profile/*",
+          "arn:aws:bedrock:*:*:application-inference-profile/*"
+        ]
+      }
+    ]
+  })
+  role = aws_iam_role.application_inference_profile_role[0].id
+}
 
 # Custom model
 

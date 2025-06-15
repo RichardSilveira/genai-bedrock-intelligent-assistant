@@ -1,0 +1,46 @@
+openapi: 3.0.0
+info:
+  title: AnyTicket Events API
+  version: 1.0.0
+  description: API to get available events for a given date and city
+paths:
+  /available_events:
+    get:
+      summary: Get available events for a given date and city
+      description: Returns a list of available events for a specified date and city.
+      operationId: getAvailableEvents
+      parameters:
+        - name: date
+          in: query
+          description: Date for which to retrieve events (YYYY-MM-DD)
+          required: true
+          schema:
+            type: string
+        - name: city
+          in: query
+          description: City for which to retrieve events
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        event:
+                          type: string
+                          description: Name of the event
+                        date:
+                          type: string
+                          description: Date of the event (YYYY-MM-DD)
+                        city:
+                          type: string
+                          description: City where the event takes place

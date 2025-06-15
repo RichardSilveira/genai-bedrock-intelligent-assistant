@@ -40,15 +40,63 @@ module "chatbot_lambda" {
     {
       Effect = "Allow"
       Action = [
-        "bedrock:InvokeModel",
+        "bedrock:InvokeModel*",
         "bedrock:Retrieve",
         "bedrock:RetrieveAndGenerate",
         "bedrock:GetInferenceProfile",
-        "bedrock-agent-runtime:RetrieveAndGenerate"
       ]
       Resource = [
         "*"
       ]
+    }
+  ]
+}
+
+# Create a zip file of the Lambda function code
+data "archive_file" "agent_action_group_lambda" {
+  type        = "zip"
+  source_file = "${path.module}/../src/agent_action_group.py"
+  output_path = "${path.module}/lambda-packages/agent_action_group.zip"
+}
+
+# Agent Action Group Lambda function
+module "agent_action_group_lambda" {
+  source = "./modules/lambda"
+
+  resource_prefix = local.resource_prefix
+  function_name   = "agent-action-group"
+  description     = "Lambda for Bedrock Agent Action Group (returns available events)"
+
+  source_path = data.archive_file.agent_action_group_lambda.output_path
+
+  handler     = "agent_action_group.handler"
+  runtime     = "python3.11"
+  timeout     = 30
+  memory_size = 128
+
+  environment_variables = {}
+
+  # Deploy Lambda in the private subnets with access to NAT Gateway
+  subnet_ids         = module.networking.private_subnet_ids
+  security_group_ids = [aws_security_group.lambda_sg.id]
+
+  reserved_concurrent_executions = 10
+
+  layers = [
+    local.lambda_layer_power_tools
+  ]
+
+  # Add permissions to invoke Bedrock
+  additional_policy_statements = [
+    {
+      Effect = "Allow"
+      Action = [
+        "bedrock:InvokeModel*",
+        "bedrock:Retrieve",
+        "bedrock:RetrieveAndGenerate",
+        "bedrock:GetInferenceProfile",
+      ]
+      Resource = local.base_fundation_model_resources
     }
   ]
 }

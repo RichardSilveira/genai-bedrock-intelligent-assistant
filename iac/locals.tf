@@ -5,6 +5,21 @@ locals {
 
   resource_prefix = "${var.project}-${var.environment}"
 
+  create_agent = true
+
+  base_agent_invoke_actions = [
+    "bedrock:InvokeAgent",
+    "bedrock:ListAgents",
+    "bedrock:GetAgent",
+    "bedrock:InvokeModel*"
+  ]
+
+  base_fundation_model_resources = [
+    "arn:aws:bedrock:*::foundation-model/*",
+    "arn:aws:bedrock:*:*:inference-profile/*",
+    "arn:aws:bedrock:*:*:application-inference-profile/*"
+  ]
+
   # required as other providers besides `aws` are used
   default_tags = {
     Owner            = var.owner

@@ -3,7 +3,7 @@ module "observability" {
 
   resource_prefix                         = local.resource_prefix
   create_aws_config                       = false
-  enable_bedrock_model_invocation_logging = false
+  enable_bedrock_model_invocation_logging = true
 
   # VPC Flow Logs configuration
   create_vpc_flow_logs = false

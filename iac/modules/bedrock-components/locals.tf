@@ -128,14 +128,14 @@ locals {
   create_kb_role = var.kb_role_arn == null && local.create_kb
   # kendra_index_id = var.create_kendra_config == true ? (var.kendra_index_id != null ? var.kendra_index_id : awscc_kendra_index.genai_kendra_index[0].id) : null
   # kendra_data_source_bucket_arn = var.create_kendra_s3_data_source ? (var.kb_s3_data_source != null ? var.kb_s3_data_source : awscc_s3_bucket.s3_data_source[0].arn) : null
-  # action_group_names            = concat(var.action_group_lambda_names_list, [var.lambda_action_group_executor])
-  # agent_role_name               = var.agent_resource_role_arn != null ? split("/", var.agent_resource_role_arn)[1] : ((var.create_agent || var.create_supervisor) ? aws_iam_role.agent_role[0].name : null)
+  action_group_names = concat(var.action_group_lambda_names_list, [var.lambda_action_group_executor])
+  agent_role_name    = var.agent_resource_role_arn != null ? split("/", var.agent_resource_role_arn)[1] : ((var.create_agent || var.create_supervisor) ? aws_iam_role.agent_role[0].name : null)
 
 
   # --------------------------------------------------
   # Main
   # --------------------------------------------------
-  # bedrock_agent_alias = var.create_agent_alias && var.use_aws_provider_alias ? aws_bedrockagent_agent_alias.bedrock_agent_alias : awscc_bedrock_agent_alias.bedrock_agent_alias
+  bedrock_agent_alias = var.create_agent_alias && var.use_aws_provider_alias ? aws_bedrockagent_agent_alias.bedrock_agent_alias : awscc_bedrock_agent_alias.bedrock_agent_alias
 
   counter_kb        = local.create_kb || var.existing_kb != null ? [1] : []
   knowledge_base_id = local.create_kb ? awscc_bedrock_knowledge_base.knowledge_base_default[0].id : null
@@ -147,39 +147,39 @@ locals {
   kb_result = [for count in local.counter_kb : local.knowledge_bases_value]
 
 
-  # counter_action_group = var.create_ag ? [1] : []
-  # action_group_value = {
-  #   action_group_name                    = var.action_group_name
-  #   description                          = var.action_group_description
-  #   action_group_state                   = var.action_group_state
-  #   parent_action_group_signature        = var.parent_action_group_signature
-  #   skip_resource_in_use_check_on_delete = var.skip_resource_in_use
-  #   api_schema = {
-  #     payload = var.api_schema_payload
-  #     s3 = {
-  #       s3_bucket_name = var.api_schema_s3_bucket_name
-  #       s3_object_key  = var.api_schema_s3_object_key
-  #     }
-  #   }
-  #   action_group_executor = {
-  #     custom_control = var.custom_control
-  #     lambda         = var.lambda_action_group_executor
-  #   }
-  # }
-  # action_group_result = [for count in local.counter_action_group : local.action_group_value]
+  counter_action_group = var.create_ag ? [1] : []
+  action_group_value = {
+    action_group_name                    = var.action_group_name
+    description                          = var.action_group_description
+    action_group_state                   = var.action_group_state
+    parent_action_group_signature        = var.parent_action_group_signature
+    skip_resource_in_use_check_on_delete = var.skip_resource_in_use
+    api_schema = {
+      payload = var.api_schema_payload
+      s3 = {
+        s3_bucket_name = var.api_schema_s3_bucket_name
+        s3_object_key  = var.api_schema_s3_object_key
+      }
+    }
+    action_group_executor = {
+      custom_control = var.custom_control
+      lambda         = var.lambda_action_group_executor
+    }
+  }
+  action_group_result = [for count in local.counter_action_group : local.action_group_value]
 
   # Create a map with action_group_name as keys for stable sorting
-  # action_group_map = var.action_group_list != null ? {
-  #   for idx, ag in var.action_group_list :
-  #   # Use action_group_name as key, or index if name is null
-  #   coalesce(try(ag.action_group_name, ""), format("%04d", idx)) => ag
-  # } : {}
+  action_group_map = var.action_group_list != null ? {
+    for idx, ag in var.action_group_list :
+    # Use action_group_name as key, or index if name is null
+    coalesce(try(ag.action_group_name, ""), format("%04d", idx)) => ag
+  } : {}
 
   # Extract values from the sorted map (Terraform maps are sorted by keys)
-  # sorted_action_groups = [for k, v in local.action_group_map : v]
+  sorted_action_groups = [for k, v in local.action_group_map : v]
 
   # Combine action groups with consistent ordering
-  # action_group_list = concat(local.action_group_result, local.sorted_action_groups)
+  action_group_list = concat(local.action_group_result, local.sorted_action_groups)
 
   # counter_collaborator = var.create_agent && var.create_agent_alias && var.create_collaborator ? 1 : 0
 
