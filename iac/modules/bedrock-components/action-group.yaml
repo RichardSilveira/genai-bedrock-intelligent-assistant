@@ -91,3 +91,53 @@ paths:
                   message:
                     type: string
                     description: Informational message about the event details
+  /buy_ticket:
+    post:
+      summary: Buy a ticket for a specific event
+      description: Initiates the ticket purchase process for a specific event. The user will receive an email with instructions to complete the purchase. Use this after finding an event you want to attend.
+      operationId: buyTicket
+      parameters:
+        - name: event
+          in: query
+          description: Name of the event you want to buy a ticket for (e.g., Rock Concert, Jazz Festival)
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: query
+          description: Your email address where purchase confirmation and further instructions will be sent
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  purchase_info:
+                    type: object
+                    properties:
+                      event:
+                        type: string
+                        description: Name of the event
+                      date:
+                        type: string
+                        description: Date of the event
+                      city:
+                        type: string
+                        description: City where the event takes place
+                      price:
+                        type: string
+                        description: Ticket price
+                      confirmation_code:
+                        type: string
+                        description: Temporary confirmation code for the purchase
+                      email:
+                        type: string
+                        description: Email where purchase instructions were sent
+                  message:
+                    type: string
+                    description: Informational message about the ticket purchase and next steps

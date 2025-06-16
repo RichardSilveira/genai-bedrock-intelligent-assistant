@@ -114,6 +114,50 @@ def handle_event_details(params):
         }
 
 
+def handle_buy_ticket(params):
+    """Handle the /buy_ticket route to initiate a ticket purchase."""
+    event_name = params.get("event")
+    email = params.get("email")
+
+    logger.info(f"Processing ticket purchase for event: {event_name}, email: {email}")
+
+    # Check if the event exists and is available
+    if event_name not in EVENT_DETAILS:
+        return {
+            "error": f"Event '{event_name}' not found",
+            "message": "We couldn't find this event. Please check the event name and try again.",
+        }
+
+    event_info = EVENT_DETAILS[event_name]
+    if event_info["availability"] == "unavailable":
+        return {
+            "error": "Event unavailable",
+            "message": f"We're sorry, but tickets for {event_name} are currently unavailable.",
+        }
+
+    # Find the event details
+    events = [e for e in AVAILABLE_EVENTS if e["event"] == event_name]
+    date = events[0]["date"] if events else "Unknown"
+    city = events[0]["city"] if events else "Unknown"
+
+    # In a real system, this would initiate the purchase process and send an email
+    confirmation_code = (
+        f"AnyTicket-{event_name.replace(' ', '')}-{hash(email) % 10000:04d}"
+    )
+
+    return {
+        "purchase_info": {
+            "event": event_name,
+            "date": date,
+            "city": city,
+            "price": event_info["price"],
+            "confirmation_code": confirmation_code,
+            "email": email,
+        },
+        "message": f"Your ticket purchase for {event_name} has been initiated! Please check your email at {email} to complete the purchase process. Your temporary confirmation code is {confirmation_code}.",
+    }
+
+
 def create_api_response(event, response_obj, status_code=200):
     """Create a standardized API response for Bedrock Agent."""
     response_body = {"application/json": {"body": json.dumps(response_obj)}}
@@ -151,6 +195,8 @@ def handler(event, context):
             response_obj = handle_available_events(params)
         elif api_path == "/event_details":
             response_obj = handle_event_details(params)
+        elif api_path == "/buy_ticket":
+            response_obj = handle_buy_ticket(params)
         else:
             response_obj = {"error": f"Unsupported API path: {api_path}"}
             return create_api_response(event, response_obj, 400)
