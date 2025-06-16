@@ -11,6 +11,7 @@ def test_should_respond_with_anyticket_refund_policy_from_rag(lambda_context):
         )
     }
     lambda_context.e2e_test_mode = True
+    # chatbot.RAG_MODE = "agentic-rag"
     result = chatbot.lambda_handler(event, lambda_context)
     body = json.loads(result["body"])
 

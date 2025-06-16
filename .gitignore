@@ -21,6 +21,7 @@ iac/lambda-packages/
 # Misc
 .DS_Store
 todos.txt
+notes.txt
 
 .vscode/*
 !vscode/extensions.json
