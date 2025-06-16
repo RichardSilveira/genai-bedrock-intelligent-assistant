@@ -66,7 +66,8 @@ def lambda_handler(event, context):
         if session_id:
             rag_args["sessionId"] = session_id
 
-        response = bedrock.retrieve_and_generate(**rag_args)
+        response = bedrock.retrieve(**rag_args)
+        # response = bedrock.retrieve_and_generate(**rag_args)
         answer = response.get("output", {}).get("text")
         session_id = response.get("sessionId")
 
