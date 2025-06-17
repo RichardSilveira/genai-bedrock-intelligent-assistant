@@ -74,10 +74,10 @@ output "knowledge_base_role_name" {
   value       = try(aws_iam_role.bedrock_knowledge_base_role[0].name, null)
 }
 
-# output "application_inference_profile_arn" {
-#   description = "The ARN of the application inference profile."
-#   value       = var.create_app_inference_profile ? awscc_bedrock_application_inference_profile.application_inference_profile[0].inference_profile_arn : null
-# }
+output "application_inference_profile_arn" {
+  description = "The ARN of the application inference profile."
+  value       = var.create_app_inference_profile ? awscc_bedrock_application_inference_profile.application_inference_profile[0].inference_profile_arn : null
+}
 
 output "bedrock_agent_id" {
   value       = var.create_agent == true && length(awscc_bedrock_agent.bedrock_agent) > 0 ? awscc_bedrock_agent.bedrock_agent[0].agent_id : null
@@ -87,4 +87,14 @@ output "bedrock_agent_id" {
 output "bedrock_agent_alias_id" {
   value       = var.create_agent_alias == true && length(awscc_bedrock_agent_alias.bedrock_agent_alias) > 0 ? awscc_bedrock_agent_alias.bedrock_agent_alias[0].agent_alias_id : null
   description = "The unique identifier of the Bedrock Agent Alias."
+}
+
+output "guardrail_id" {
+  value       = var.create_guardrail ? awscc_bedrock_guardrail.guardrail[0].id : null
+  description = "The unique identifier of the Guardrail"
+}
+
+output "guardrail_version" {
+  value       = var.create_guardrail ? awscc_bedrock_guardrail_version.guardrail[0].version : null
+  description = "The version of the Guardrail"
 }

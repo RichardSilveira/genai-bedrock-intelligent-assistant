@@ -7,7 +7,11 @@ from aws_lambda_powertools import Logger
 KB_ID = os.environ["BEDROCK_KB_ID"]
 MODEL_ARN = os.environ["BEDROCK_MODEL_ARN"]
 REGION = os.environ.get("AWS_REGION", "us-east-1")
-RAG_MODE = os.environ.get("RAG_MODE", "rag")  # Default to standard RAG if not specified
+RAG_MODE = os.environ.get(
+    "KB_RAG_MODE", "rag"
+)  # Default to standard RAG if not specified
+GUARDRAIL_ID = os.environ["KB_GUARDRAIL_ID"]
+GUARDRAIL_VERSION = os.environ.get("KB_GUARDRAIL_VERSION", "1")
 
 
 if RAG_MODE == "agentic-rag":
@@ -64,6 +68,10 @@ RAG_CONFIG = {
         "generationConfiguration": {
             "inferenceConfig": INFERENCE_CONFIG,
             "promptTemplate": {"textPromptTemplate": PROMPT_TEMPLATE},
+            "guardrailConfiguration": {
+                "guardrailId": GUARDRAIL_ID,
+                "guardrailVersion": GUARDRAIL_VERSION,
+            },
         },
     },
 }

@@ -52,3 +52,9 @@ variable "bedrock_model_arn" {
   description = "ARN of the Bedrock model to use for the chatbot Lambda."
   type        = string
 }
+
+variable "kb_rag_mode" {
+  description = "value"
+  type        = string
+  default     = "agentic-rag"
+}
