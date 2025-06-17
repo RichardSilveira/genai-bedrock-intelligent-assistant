@@ -503,6 +503,7 @@ No requirements.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_application_inference_profile_arn"></a> [application\_inference\_profile\_arn](#output\_application\_inference\_profile\_arn) | The ARN of the application inference profile. |
 | <a name="output_bedrock_agent"></a> [bedrock\_agent](#output\_bedrock\_agent) | The Amazon Bedrock Agent if it is created. |
 | <a name="output_bedrock_agent_alias"></a> [bedrock\_agent\_alias](#output\_bedrock\_agent\_alias) | The Amazon Bedrock Agent Alias if it is created. |
 | <a name="output_bedrock_agent_alias_id"></a> [bedrock\_agent\_alias\_id](#output\_bedrock\_agent\_alias\_id) | The unique identifier of the Bedrock Agent Alias. |
@@ -511,6 +512,8 @@ No requirements.
 | <a name="output_datasource_identifier"></a> [datasource\_identifier](#output\_datasource\_identifier) | The unique identifier of the data source. |
 | <a name="output_default_collection"></a> [default\_collection](#output\_default\_collection) | Opensearch default collection value. |
 | <a name="output_default_kb_identifier"></a> [default\_kb\_identifier](#output\_default\_kb\_identifier) | The unique identifier of the default knowledge base that was created.  If no default KB was requested, value will be null |
+| <a name="output_guardrail_id"></a> [guardrail\_id](#output\_guardrail\_id) | The unique identifier of the Guardrail |
+| <a name="output_guardrail_version"></a> [guardrail\_version](#output\_guardrail\_version) | The version of the Guardrail |
 | <a name="output_knowledge_base_role_name"></a> [knowledge\_base\_role\_name](#output\_knowledge\_base\_role\_name) | The name of the IAM role used by the knowledge base. |
 | <a name="output_s3_data_source_arn"></a> [s3\_data\_source\_arn](#output\_s3\_data\_source\_arn) | The Amazon Bedrock Data Source for S3. |
 | <a name="output_s3_data_source_name"></a> [s3\_data\_source\_name](#output\_s3\_data\_source\_name) | The name of the Amazon Bedrock Data Source for S3. |
