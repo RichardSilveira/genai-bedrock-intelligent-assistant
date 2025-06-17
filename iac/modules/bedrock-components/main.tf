@@ -81,39 +81,6 @@ resource "aws_bedrockagent_agent_alias" "bedrock_agent_alias" {
   tags = var.agent_alias_tags
 }
 
-# Agent Collaborator
-
-# resource "aws_bedrockagent_agent_collaborator" "agent_collaborator" {
-#   count                      = local.counter_collaborator
-#   agent_id                   = var.create_supervisor ? aws_bedrockagent_agent.agent_supervisor[0].agent_id : var.supervisor_id
-#   collaboration_instruction  = var.collaboration_instruction
-#   collaborator_name          = "${var.resource_prefix}-${var.collaborator_name}"
-#   relay_conversation_history = "TO_COLLABORATOR"
-
-#   agent_descriptor {
-#     alias_arn = local.bedrock_agent_alias[0].agent_alias_arn
-#   }
-
-#   depends_on = [awscc_bedrock_agent.bedrock_agent[0], local.bedrock_agent_alias]
-# }
-
-# resource "aws_bedrockagent_agent" "agent_supervisor" {
-#   count                   = var.create_supervisor ? 1 : 0
-#   agent_name              = "${var.resource_prefix}-${var.supervisor_name}"
-#   agent_resource_role_arn = var.agent_resource_role_arn != null ? var.agent_resource_role_arn : aws_iam_role.agent_role[0].arn
-
-#   agent_collaboration         = var.agent_collaboration
-#   idle_session_ttl_in_seconds = var.supervisor_idle_session_ttl
-#   foundation_model            = var.create_app_inference_profile ? awscc_bedrock_application_inference_profile.application_inference_profile[0].inference_profile_arn : var.supervisor_model
-#   instruction                 = var.supervisor_instruction
-#   customer_encryption_key_arn = var.supervisor_kms_key_arn
-#   #checkov:skip=CKV_AWS_383:The user can optionally associate agent with Bedrock guardrails
-#   guardrail_configuration = local.supervisor_guardrail
-#   prepare_agent           = false
-
-#   depends_on = [time_sleep.wait_for_inference_profile]
-# }
-
 # – Guardrail –
 
 resource "awscc_bedrock_guardrail" "guardrail" {
@@ -138,6 +105,14 @@ resource "awscc_bedrock_guardrail" "guardrail" {
   }
   tags        = var.guardrail_tags
   kms_key_arn = var.guardrail_kms_key_arn
+
+  # 🐛 As the awscc provider is not so mature, we need to add this at some point to prevent perpetual in-place updates
+  lifecycle {
+    ignore_changes = [
+      tags,
+      content_policy_config.filters_config
+    ]
+  }
 }
 
 resource "awscc_bedrock_guardrail_version" "guardrail" {
@@ -145,67 +120,3 @@ resource "awscc_bedrock_guardrail_version" "guardrail" {
   guardrail_identifier = awscc_bedrock_guardrail.guardrail[0].guardrail_id
   description          = "Guardrail version"
 }
-
-# – Bedrock Flow –
-
-# resource "awscc_bedrock_flow_alias" "flow_alias" {
-#   count       = var.create_flow_alias ? 1 : 0
-#   name        = var.flow_alias_name
-#   flow_arn    = var.flow_arn
-#   description = var.flow_alias_description
-#   routing_configuration = [
-#     {
-#       flow_version = var.flow_version != null ? var.flow_version : awscc_bedrock_flow_version.flow_version[0].version
-#     }
-#   ]
-# }
-
-# resource "awscc_bedrock_flow_version" "flow_version" {
-#   count       = var.flow_version == null && var.create_flow_alias ? 1 : 0
-#   flow_arn    = var.flow_arn
-#   description = var.flow_version_description
-# }
-
-# – Custom Model –
-
-# resource "aws_bedrock_custom_model" "custom_model" {
-#   count                   = var.create_custom_model ? 1 : 0
-#   custom_model_name       = "${var.resource_prefix}-${var.custom_model_name}"
-#   job_name                = "${var.resource_prefix}-${var.custom_model_job_name}"
-#   base_model_identifier   = data.aws_bedrock_foundation_model.model_identifier[0].model_arn
-#   role_arn                = aws_iam_role.custom_model_role[0].arn
-#   custom_model_kms_key_id = var.custom_model_kms_key_id
-#   customization_type      = var.customization_type
-#   hyperparameters         = var.custom_model_hyperparameters
-#   output_data_config {
-#     s3_uri = var.custom_model_output_uri == null ? "s3://${awscc_s3_bucket.custom_model_output[0].id}/" : "s3://${var.custom_model_output_uri}"
-#   }
-#   training_data_config {
-#     s3_uri = "s3://${var.custom_model_training_uri}"
-#   }
-#   tags = var.custom_model_tags
-# }
-
-# resource "awscc_s3_bucket" "custom_model_output" {
-#   count       = var.custom_model_output_uri == null && var.create_custom_model == true ? 1 : 0
-#   bucket_name = "${var.resource_prefix}-${var.custom_model_name}-output-bucket"
-#   public_access_block_configuration = {
-#     block_public_acls       = true
-#     block_public_policy     = true
-#     ignore_public_acls      = true
-#     restrict_public_buckets = true
-#   }
-#   bucket_encryption = {
-#     server_side_encryption_configuration = [{
-#       bucket_key_enabled = true
-#       server_side_encryption_by_default = {
-#         sse_algorithm     = var.kb_s3_data_source_kms_arn == null ? "AES256" : "aws:kms"
-#         kms_master_key_id = var.kb_s3_data_source_kms_arn
-#       }
-#     }]
-#   }
-#   tags = var.custom_model_tags != null ? [for k, v in var.custom_model_tags : { key = k, value = v }] : [{
-#     key   = "Name"
-#     value = "${var.resource_prefix}-${var.custom_model_name}-output-bucket"
-#   }]
-# }

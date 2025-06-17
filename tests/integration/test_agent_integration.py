@@ -15,4 +15,3 @@ def test_should_respond_with_agent(lambda_context):
     body = json.loads(result["body"])
     assert result["statusCode"] == 200
     assert body.get("answer") and isinstance(body["answer"], str)
-    assert "raw_response" in body

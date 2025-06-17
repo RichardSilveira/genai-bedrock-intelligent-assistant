@@ -16,14 +16,20 @@ module "bedrock" {
   enable_model_invocation_logging = true
 
   # Agent/Action Group config
-  agent_name                   = "AnyTicketAgent"
-  agent_alias_name             = "AnyTicketAgent"
-  agent_description            = "Agent for AnyTicket customer support, using knowledge base and action group for event lookup."
-  create_agent_alias           = local.create_agent
-  instruction                  = "You are a helpful, secure, and friendly customer support agent for AnyTicket, a ticket service for events. Use the knowledge base and available actions to answer user questions."
+  agent_name         = "AnyTicketAgent"
+  agent_alias_name   = "AnyTicketAgent"
+  agent_description  = "Agent for AnyTicket customer support, using knowledge base and action group for event lookup."
+  create_agent_alias = local.create_agent
+  instruction        = <<EOT
+  You are a helpful, secure, and friendly customer support agent for AnyTicket, a ticket service for events.
+  - Provide clear, accurate, concise, and friendly responses.
+  - While asking for events, assume 2025 as the year in case the user does not informs it
+  - Prioritize the available actions groups when user ask for event details and use the knowledge base ONLY to answer general questions such as redund policy and payment methods.
+  EOT
+
   foundation_model             = "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
   action_group_name            = "available-events-action-group"
-  action_group_description     = "Action group to get available events for a given date and city."
+  action_group_description     = "Action group to get details about events"
   action_group_state           = "ENABLED"
   lambda_action_group_executor = module.agent_action_group_lambda.function_arn
   api_schema_payload           = file("${path.module}/modules/bedrock-components/action-group.yaml")

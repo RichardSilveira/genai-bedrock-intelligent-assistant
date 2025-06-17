@@ -125,9 +125,7 @@ locals {
   # --------------------------------------------------
   # IAM
   # --------------------------------------------------
-  create_kb_role = var.kb_role_arn == null && local.create_kb
-  # kendra_index_id = var.create_kendra_config == true ? (var.kendra_index_id != null ? var.kendra_index_id : awscc_kendra_index.genai_kendra_index[0].id) : null
-  # kendra_data_source_bucket_arn = var.create_kendra_s3_data_source ? (var.kb_s3_data_source != null ? var.kb_s3_data_source : awscc_s3_bucket.s3_data_source[0].arn) : null
+  create_kb_role     = var.kb_role_arn == null && local.create_kb
   action_group_names = concat(var.action_group_lambda_names_list, [var.lambda_action_group_executor])
   agent_role_name    = var.agent_resource_role_arn != null ? split("/", var.agent_resource_role_arn)[1] : ((var.create_agent || var.create_supervisor) ? aws_iam_role.agent_role[0].name : null)
 
@@ -180,11 +178,4 @@ locals {
 
   # Combine action groups with consistent ordering
   action_group_list = concat(local.action_group_result, local.sorted_action_groups)
-
-  # counter_collaborator = var.create_agent && var.create_agent_alias && var.create_collaborator ? 1 : 0
-
-  # supervisor_guardrail = var.create_supervisor_guardrail == false || local.counter_collaborator == 0 ? null : [{
-  #   guardrail_identifier = var.supervisor_guardrail_id
-  #   guardrail_version    = var.supervisor_guardrail_version
-  # }]
 }

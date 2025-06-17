@@ -11,6 +11,38 @@ AVAILABLE_EVENTS = [
     {"event": "Food Expo", "date": "2025-06-20", "city": "Chicago"},
 ]
 
+# Detailed event information
+EVENT_DETAILS = {
+    "Rock Concert": {
+        "name": "Rock Concert",
+        "price": "$75.00",
+        "availability": "available",
+        "seats_remaining": "few",
+        "age_classification": "18+",
+    },
+    "Jazz Festival": {
+        "name": "Jazz Festival",
+        "price": "$120.00",
+        "availability": "available",
+        "seats_remaining": "many",
+        "age_classification": "All ages",
+    },
+    "Tech Conference": {
+        "name": "Tech Conference",
+        "price": "$350.00",
+        "availability": "available",
+        "seats_remaining": "many",
+        "age_classification": "All ages",
+    },
+    "Food Expo": {
+        "name": "Food Expo",
+        "price": "$45.00",
+        "availability": "unavailable",
+        "seats_remaining": "none",
+        "age_classification": "All ages",
+    },
+}
+
 
 def handle_available_events(params):
     """Handle the /available_events route to find events by date and city."""
@@ -56,6 +88,76 @@ def handle_available_events(params):
     return {"events": events, "message": message}
 
 
+def handle_event_details(params):
+    """Handle the /event_details route to get detailed information about a specific event."""
+    event_name = params.get("event")
+
+    logger.info(f"Getting details for event: {event_name}")
+
+    # Get the detailed information for the event
+    if event_name in EVENT_DETAILS:
+        details = EVENT_DETAILS[event_name]
+
+        # Find the event in AVAILABLE_EVENTS to get date and city
+        events = [e for e in AVAILABLE_EVENTS if e["event"] == event_name]
+        date = events[0]["date"] if events else "Unknown"
+        city = events[0]["city"] if events else "Unknown"
+
+        return {
+            "event_details": {**details, "date": date, "city": city},
+            "message": f"Details for {event_name} in {city} on {date}",
+        }
+    else:
+        return {
+            "error": f"No detailed information available for '{event_name}'",
+            "message": "We're sorry, but detailed information for this event is not available.",
+        }
+
+
+def handle_buy_ticket(params):
+    """Handle the /buy_ticket route to initiate a ticket purchase."""
+    event_name = params.get("event")
+    email = params.get("email")
+
+    logger.info(f"Processing ticket purchase for event: {event_name}, email: {email}")
+
+    # Check if the event exists and is available
+    if event_name not in EVENT_DETAILS:
+        return {
+            "error": f"Event '{event_name}' not found",
+            "message": "We couldn't find this event. Please check the event name and try again.",
+        }
+
+    event_info = EVENT_DETAILS[event_name]
+    if event_info["availability"] == "unavailable":
+        return {
+            "error": "Event unavailable",
+            "message": f"We're sorry, but tickets for {event_name} are currently unavailable.",
+        }
+
+    # Find the event details
+    events = [e for e in AVAILABLE_EVENTS if e["event"] == event_name]
+    date = events[0]["date"] if events else "Unknown"
+    city = events[0]["city"] if events else "Unknown"
+
+    # In a real system, this would initiate the purchase process and send an email
+    confirmation_code = (
+        f"AnyTicket-{event_name.replace(' ', '')}-{hash(email) % 10000:04d}"
+    )
+
+    return {
+        "purchase_info": {
+            "event": event_name,
+            "date": date,
+            "city": city,
+            "price": event_info["price"],
+            "confirmation_code": confirmation_code,
+            "email": email,
+        },
+        "message": f"Your ticket purchase for {event_name} has been initiated! Please check your email at {email} to complete the purchase process. Your temporary confirmation code is {confirmation_code}.",
+    }
+
+
 def create_api_response(event, response_obj, status_code=200):
     """Create a standardized API response for Bedrock Agent."""
     response_body = {"application/json": {"body": json.dumps(response_obj)}}
@@ -91,6 +193,10 @@ def handler(event, context):
         # Route to the appropriate handler based on apiPath
         if api_path == "/available_events":
             response_obj = handle_available_events(params)
+        elif api_path == "/event_details":
+            response_obj = handle_event_details(params)
+        elif api_path == "/buy_ticket":
+            response_obj = handle_buy_ticket(params)
         else:
             response_obj = {"error": f"Unsupported API path: {api_path}"}
             return create_api_response(event, response_obj, 400)

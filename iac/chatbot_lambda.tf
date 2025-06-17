@@ -21,15 +21,25 @@ module "chatbot_lambda" {
   memory_size = 256
 
   environment_variables = {
-    BEDROCK_KB_ID     = module.bedrock.default_kb_identifier
-    BEDROCK_MODEL_ARN = var.bedrock_model_arn
+    BEDROCK_KB_ID        = module.bedrock.default_kb_identifier
+    BEDROCK_MODEL_ARN    = var.bedrock_model_arn
+    KB_RAG_MODE          = var.kb_rag_mode
+    KB_GUARDRAIL_ID      = element(split("/", module.bedrock.guardrail_id), length(split("/", module.bedrock.guardrail_id)) - 1)
+    KB_GUARDRAIL_VERSION = module.bedrock.guardrail_version
   }
 
   # Deploy Lambda in the private subnets with access to NAT Gateway
   subnet_ids         = module.networking.private_subnet_ids
   security_group_ids = [aws_security_group.lambda_sg.id]
 
-  reserved_concurrent_executions = 500 # to ensure capacity in case of a spike as this is the key application's lambda
+  reserved_concurrent_executions = 250 # to ensure capacity in case of a spike as this is the key application's lambda
+
+  # Enable provisioned concurrency with auto-scaling
+  provisioned_concurrent_executions = 2 # Initial provisioned concurrency
+  enable_autoscaling                = true
+  autoscaling_min_capacity          = 2  # Minimum provisioned concurrency
+  autoscaling_max_capacity          = 10 # Maximum provisioned concurrency
+  autoscaling_target_utilization    = 70 # Target utilization percentage
 
   layers = [
     local.lambda_layer_power_tools
@@ -44,6 +54,7 @@ module "chatbot_lambda" {
         "bedrock:Retrieve",
         "bedrock:RetrieveAndGenerate",
         "bedrock:GetInferenceProfile",
+        "bedrock:ApplyGuardrail"
       ]
       Resource = [
         "*"
@@ -79,8 +90,6 @@ module "agent_action_group_lambda" {
   # Deploy Lambda in the private subnets with access to NAT Gateway
   subnet_ids         = module.networking.private_subnet_ids
   security_group_ids = [aws_security_group.lambda_sg.id]
-
-  reserved_concurrent_executions = 10
 
   layers = [
     local.lambda_layer_power_tools

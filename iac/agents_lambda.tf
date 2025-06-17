@@ -30,6 +30,15 @@ module "agent_entrypoint_lambda" {
   subnet_ids         = module.networking.private_subnet_ids
   security_group_ids = [aws_security_group.lambda_sg.id]
 
+  reserved_concurrent_executions = 250 # to ensure capacity in case of a spike as this is the key application's lambda
+
+  # Enable provisioned concurrency with auto-scaling
+  provisioned_concurrent_executions = 2 # Initial provisioned concurrency
+  enable_autoscaling                = true
+  autoscaling_min_capacity          = 2  # Minimum provisioned concurrency
+  autoscaling_max_capacity          = 10 # Maximum provisioned concurrency
+  autoscaling_target_utilization    = 70 # Target utilization percentage
+
   layers = [
     local.lambda_layer_power_tools
   ]

@@ -107,6 +107,41 @@ variable "reserved_concurrent_executions" {
   default     = null
 }
 
+variable "provisioned_concurrent_executions" {
+  description = "The amount of provisioned concurrency to allocate for the function. Only applies to published versions and aliases."
+  type        = number
+  default     = null
+}
+
+variable "enable_autoscaling" {
+  description = "Whether to enable auto scaling for provisioned concurrency"
+  type        = bool
+  default     = false
+}
+
+variable "autoscaling_min_capacity" {
+  description = "Minimum capacity for auto scaling of provisioned concurrency"
+  type        = number
+  default     = 1
+}
+
+variable "autoscaling_max_capacity" {
+  description = "Maximum capacity for auto scaling of provisioned concurrency"
+  type        = number
+  default     = 10
+}
+
+variable "autoscaling_target_utilization" {
+  description = "Target utilization percentage for auto scaling of provisioned concurrency (10-90). This is a percentage value that will be converted to a decimal (0.1-0.9) for the AWS API."
+  type        = number
+  default     = 70
+
+  validation {
+    condition     = var.autoscaling_target_utilization >= 10 && var.autoscaling_target_utilization <= 90
+    error_message = "Target utilization must be between 10 and 90 percent."
+  }
+}
+
 variable "layers" {
   description = "List of Lambda Layer ARNs to attach to the function."
   type        = list(string)
