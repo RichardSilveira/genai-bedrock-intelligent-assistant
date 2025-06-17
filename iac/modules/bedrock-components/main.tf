@@ -138,6 +138,14 @@ resource "awscc_bedrock_guardrail" "guardrail" {
   }
   tags        = var.guardrail_tags
   kms_key_arn = var.guardrail_kms_key_arn
+
+  # 🐛 As the awscc provider is not so mature, we need to add this at some point to prevent perpetual in-place updates
+  lifecycle {
+    ignore_changes = [
+      tags,
+      content_policy_config.filters_config
+    ]
+  }
 }
 
 resource "awscc_bedrock_guardrail_version" "guardrail" {
