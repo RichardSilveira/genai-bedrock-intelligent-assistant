@@ -272,56 +272,6 @@ resource "aws_iam_role_policy" "app_inference_profile_role_policy" {
   role = aws_iam_role.application_inference_profile_role[0].id
 }
 
-# Create IAM role for Kendra Data Source
-# resource "awscc_iam_role" "kendra_s3_datasource_role" {
-#   count = var.create_kendra_s3_data_source ? 1 : 0
-#   assume_role_policy_document = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Action = "sts:AssumeRole"
-#         Effect = "Allow"
-#         Principal = {
-#           Service = "kendra.amazonaws.com"
-#         }
-#       }
-#     ]
-#   })
-#   description = "IAM role for Kendra Data Source"
-#   path        = "/"
-#   role_name   = "kendra-datasource-role"
-
-#   policies = [
-#     {
-#       policy_name = "kendra-datasource-policy"
-#       policy_document = jsonencode({
-#         Version = "2012-10-17"
-#         Statement = [
-#           {
-#             Effect = "Allow"
-#             Action = [
-#               "s3:GetObject",
-#               "s3:ListBucket"
-#             ]
-#             Resource = [
-#               local.kendra_data_source_bucket_arn,
-#               "${local.kendra_data_source_bucket_arn}/*"
-#             ]
-#           },
-#           {
-#             Effect : "Allow",
-#             Action : [
-#               "kendra:BatchPutDocument",
-#               "kendra:BatchDeleteDocument"
-#             ],
-#             Resource : "arn:aws:kendra:${local.region}:${local.account_id}:index/${local.kendra_index_id}"
-#           }
-#         ]
-#       })
-#     }
-#   ]
-# }
-
 # SQL Knowledge Base IAM
 resource "aws_iam_policy" "bedrock_kb_sql" {
   count = var.kb_role_arn != null || var.create_sql_config == false ? 0 : 1
