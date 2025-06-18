@@ -37,6 +37,25 @@ For instance, this project's **AnyTicket AI Support Assistant** demonstrates how
 
 ![Agentic RAG](./docs/assets/agentic-rag.drawio.png)
 
+## Architecting for Scale: Reusability and Integration Capabilities
+
+Unlocking enterprise value through versatile Generative AI integration.
+
+### Amazon Bedrock Knowledge Bases: Flexible Integration Points
+
+Amazon Bedrock Knowledge Bases are designed for broad reusability and seamless integration across diverse applications:
+
+- **API-oriented Solution:** Knowledge Bases can be exposed as an API, powering a wide array of applications, from internal, company-dedicated solutions to external-facing SaaS products, enabling scalable and secure access to your proprietary data.
+- **Foundation for Bedrock Agents:** Beyond direct querying, Knowledge Bases serve as a foundational data source for Bedrock Agents, enabling them to retrieve contextually rich information necessary for building complex, multi-step conversational flows and automated tasks.
+- **Direct MCP Integration:** Through [MCP](https://awslabs.github.io/mcp/servers/bedrock-kb-retrieval-mcp-server/), developers can query Knowledge Bases from various Integrated Development Environments (IDEs) such as Cursor or VSCode, or via the AWS Q CLI. This also enables building **custom internal tools** that allow product managers or data analysts to directly explore, validate, or audit specific private data points within the knowledge base, offering quick factual lookups outside of a conversational AI.
+
+### Amazon Bedrock Agents: Orchestrating Advanced Workflows
+
+Amazon Bedrock Agents offer powerful reusability and collaboration patterns for complex automation:
+
+- **Agent Flow as an API:** Individual Agent workflows can be exposed as APIs, providing powerful, task-oriented capabilities that can be consumed by other applications or services, whether for internal automation or as part of a public-facing product.
+- **Multi-Agent Collaboration:** For highly complex tasks, Amazon Bedrock Agents supports advanced multi-agent collaboration. A designated **Supervisor Agent** orchestrates sophisticated workflows by intelligently delegating specific sub-tasks to specialized **Collaborator Agents**. This modular approach allows for breaking down intricate problems, leveraging distinct areas of expertise, and seamlessly combining results to achieve comprehensive, automated solutions.
+
 ## 🚀 Executive Summary
 
 - **Business Value:**
