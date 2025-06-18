@@ -70,6 +70,30 @@ Building production-grade Generative AI applications requires a strong architect
 
 This project's core architecture exemplifies these principles, particularly in its robust API communication and comprehensive security framework—critical aspects for any Generative AI solution operating at scale.
 
+### API Communication and Security Architecture
+
+This architecture follows a defense-in-depth model to provide a secure and globally accelerated entry point for the application's API. Its design focuses on protecting traffic at the network edge, accelerating user requests via the AWS global backbone, and decoupling the API endpoint layer from the core RAG processing logic.
+
+![API Communication and Security Architecture](./docs/assets/api-communication-security-architecture.drawio.png)
+
+The request flow and key components are:
+
+- **AWS WAF:** Provides a defense-in-depth, Layer 7 firewall at the network edge. It inspects incoming requests with a prioritized, multi-layered strategy, optimized for efficiency and performance _(managing WAF Capacity Units (WCU) to balance the computational cost of complex rules with their security benefits and the need for low-latency traffic inspection)_.
+
+- **IP & Rate Limiting:** Immediately blocks known malicious IPs (`AmazonIpReputationList`) and provides automated protection against brute-force and DDoS attacks using a `RateLimitRule`.
+- **Threat Signature Matching:** Utilizes AWS Managed Rule Sets to block requests from anonymous proxies (`AnonymousIpList`), known exploit patterns (`KnownBadInputsRuleSet`), and common web attacks defined in the OWASP Top 10 (`CoreRuleSet`).
+
+- **Amazon CloudFront:** Acts as the global Content Delivery Network (CDN). It accelerates API performance by routing users to the nearest edge location and utilizes the AWS global backbone to communicate with the origin. It is configured to be the **only** entry point to the API Gateway.
+
+- **Amazon API Gateway (HTTP API):** Serves as the managed, regional entry point for our backend. It handles request validation, throttling, and routing. Access to the API Gateway is locked down and verified by a **custom Lambda Authorizer**, which performs two critical checks:
+
+  1.  It validates a secret `X-Origin-Verify` header to ensure the request is from our CloudFront distribution.
+  2.  It validates the client-provided `x-api-key` required for API access.
+
+- **AWS Lambda:** The function is invoked synchronously by API Gateway and runs within our private VPC.
+  - **Availability and Performance Efficiency:** To ensure responsiveness during traffic spikes and protect downstream resources, the key functions are configured with **reserved concurrency** and **provisioned concurrency**.
+  - **Dependency Management:** Common libraries and dependencies are managed using **Lambda Layers** to promote code re-use, better organization, and smaller deployment package sizes.
+
 ## 🚀 Executive Summary
 
 - **Business Value:**
