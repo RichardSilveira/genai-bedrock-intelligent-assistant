@@ -128,6 +128,9 @@
         <mxCell id="FS2BE-fKRuYmprh52bt6-55" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;" edge="1" parent="FS2BE-fKRuYmprh52bt6-43" source="FS2BE-fKRuYmprh52bt6-4" target="FS2BE-fKRuYmprh52bt6-45">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="FS2BE-fKRuYmprh52bt6-57" value="Parameter Store for secrets" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.parameter_store;" vertex="1" parent="Mudxv_R2OKV88G6gSwlo-3">
+          <mxGeometry x="203" y="430.08" width="48" height="49.92" as="geometry" />
+        </mxCell>
         <mxCell id="Mudxv_R2OKV88G6gSwlo-26" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="Mudxv_R2OKV88G6gSwlo-5" target="Mudxv_R2OKV88G6gSwlo-11" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
