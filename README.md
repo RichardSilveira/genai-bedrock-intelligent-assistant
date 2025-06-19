@@ -103,6 +103,12 @@ The request flow and key components are:
 
 - **S3:** Stores **company's private data** with Restricted Resource Policies for Knowledge Base-only access, leveraging **SSE-KMS with Bucket Keys enabled** for enhanced key control, auditable access tracking by security teams, and cost optimization.
 
+### Networking Architecture
+
+The diagram below illustrates the networking components provisioned by the infrastructure code. While networking is not the main focus of this repository, it demonstrates production-grade VPC design and AWS best practices.
+
+![Networking Components](./docs/assets/networking-components.drawio.png)
+
 ## 🚀 Executive Summary
 
 - **Business Value:**
