@@ -62,11 +62,11 @@ Building production-grade Generative AI applications requires a strong architect
 
 **Key Pillars for Production-Ready AI:**
 
-- **Operational Excellence:** Logging and monitoring for continuous improvement and efficiency.
-- **Security:** Multi-layered protection with AWS WAF on top of CloudFront for protection at the edge, complemented by API keys, IAM least privilege, Bedrock Guardrails, and prompt injection defenses.
-- **Reliability:** High availability and fault tolerance via Multi-AZ VPC, reserved Lambda concurrency, API Gateway throttling, and Cross-Region Inference Profiles for enhanced resilience and throughput across geographies.
+- **Operational Excellence:** Logging and monitoring (e.g., Model Invocation Logs, VPC Flow Logs) for continuous improvement and efficiency.
+- **Security:** Multi-layered protection with AWS WAF on top of CloudFront for protection at the edge, complemented by API keys, IAM least privilege, restrict networking firewall rules (NACL/SG), Bedrock Guardrails, and prompt injection defenses.
+- **Reliability:** High availability and fault tolerance via Multi-AZ VPC (with multiple NATs), reserved Lambda concurrency, API Gateway throttling, and Cross-Region Inference Profiles for enhanced resilience and throughput across geographies.
 - **Performance Efficiency:** Optimized resource utilization with serverless architecture, Lambda Provisioned Concurrency and Auto-Scaling for consistent low-latency responses, and global CDN (CloudFront).
-- **Cost Optimization:** Efficient resource sizing, pay-as-you-go models, and Cost Allocation Tags for effective cost tracking.
+- **Cost Optimization:** Efficient resource sizing, pay-as-you-go models, Cost Allocation Tags for effective cost tracking, and effective Foundation Model selection strategy as we need 2 FM in this use-case _(one for the KB, and another for the Agent)_.
 
 This project's core architecture exemplifies these principles, particularly in its robust API communication and comprehensive security framework—critical aspects for any Generative AI solution operating at scale.
 
@@ -91,8 +91,11 @@ The request flow and key components are:
   2.  It validates the client-provided `x-api-key` required for API access.
 
 - **AWS Lambda:** The function is invoked synchronously by API Gateway and runs within our private VPC.
+
   - **Availability and Performance Efficiency:** To ensure responsiveness during traffic spikes and protect downstream resources, the key functions are configured with **reserved concurrency** and **provisioned concurrency**.
   - **Dependency Management:** Common libraries and dependencies are managed using **Lambda Layers** to promote code re-use, better organization, and smaller deployment package sizes.
+
+- **Guardrails:** To PII exposure, filter harmful content, block undesirable topics, enhancing safety and privacy.
 
 ## 🚀 Executive Summary
 
