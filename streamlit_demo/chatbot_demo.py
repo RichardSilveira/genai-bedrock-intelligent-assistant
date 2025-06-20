@@ -10,9 +10,15 @@ st.markdown(
     """
 Welcome to **AnyTicket's AI Support Assistant**! 🎟️
 
-Ask anything about your event tickets, orders, or our services. Our intelligent assistant is here to help you 24/7 with fast, friendly, and accurate answers—powered by AWS Bedrock and Retrieval-Augmented Generation (RAG).
+I can help you with event information, manage your orders, and even purchase tickets. Go ahead and tell me what you need.
 
-_This demo showcases a production-grade GenAI solution with secure, contextual Q&A from diverse data sources. Built for reliability, safety, and a great customer experience._
+For example, you can try:
+
+- "Find rock concerts in July."
+- "What's the status of my last order?"
+- "Help me buy two tickets for the Rock Concert in New Yor this Friday."
+
+_This demo features an AI Agent powered by AWS Bedrock. It's built to handle tasks from start to finish, providing a helpful, secure, and interactive experience._
 """
 )
 
