@@ -10,6 +10,12 @@ Beyond the "getting start", this practical example highlights:
 
 This repository serves as a practical reference for professionals building robust, scalable, and production-ready GenAI chatbots at scale, following AWS’s Well-Architected Framework.
 
+![demo](./docs/assets/genai-chatbot-demo.gif)
+
+> 💰 _This demo uses Claude 3.7 Sonnet for the Agent and Amazon Nova Micro for the KB model to balance performance and cost-efficiency_
+
+---
+
 ## The Evolution of Generative AI: From RAG to Agentic RAG
 
 ### 📚 What is RAG?
@@ -42,19 +48,19 @@ For example, this project's Agentic RAG chatbot demonstrates an autonomous conve
 
 ## 🏗️ High-Level Architecture
 
-- **Frontend:** Streamlit demo (for portfolio/demo only)
+- **Frontend:** Streamlit demo (for demo only)
 - **API Layer:**
-  - Amazon API Gateway (HTTP API, Lambda Proxy integration **for scalable, managed entry point**)
-  - Custom Lambda Authorizer (**ensures robust API key & origin verification for secure access**)
+  - Amazon API Gateway (HTTP API, Lambda Proxy integration **for scalable, managed entry point with rate limit enabled**)
+  - Custom Lambda Authorizer (ensures robust API key & origin verification for secure access)
 - **Application Logic & Agent Orchestration:**
   - AWS Lambda (Python, serving as the orchestrator for Bedrock Agents and other services)
-  - **Amazon Bedrock Agents:** Drives multi-turn conversations and complex task execution. Manages session state directly (no separate database needed) and leverages tools for actions.
+  - **Amazon Bedrock Agents:** Drives **multi-turn conversations and complex task execution**. Manages session state directly (no separate database needed) and leverages tools for actions.
 - **Data & Knowledge Base:**
   - Bedrock Knowledge Base (backed by S3, supports various data sources like Pinecone, OpenSearch, etc.)
   - Secure prompt engineering applied at the Bedrock layer (guiding Agent behavior and content safety)
 - **Networking & Security:**
-  - **AWS WAF (Layer 7 protection at the edge), CloudFront (API acceleration, DDoS protection)**
-  - VPC, private subnets, NAT Gateway, **NACL**, security groups (for secure and isolated networking)
+  - AWS WAF (Layer 7 protection at the edge), CloudFront (API acceleration, DDoS protection)
+  - VPC, private subnets, NAT Gateway, NACL, security groups (for secure and isolated networking)
 - **Observability:**
   - CloudWatch logs, metrics, and alarms (for comprehensive operational insight)
 - **IaC:**
