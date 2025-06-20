@@ -2,7 +2,7 @@
 
 A **production-ready** showcase for building scalable AI assistants with AWS Bedrock and Agentic RAG.
 
-Beyond the "getting start", this practical example highlights:
+Beyond a "getting started", this practical example highlights:
 
 - Advanced cloud architecture for GenAI applications
 - Secure, Terraform-managed infrastructure (IaC).
@@ -80,6 +80,8 @@ Amazon Bedrock Knowledge Bases are designed for broad reusability and seamless i
 - **Foundation for Bedrock Agents:** Beyond direct querying, Knowledge Bases serve as a foundational data source for Bedrock Agents, enabling them to retrieve contextually rich information necessary for building complex, multi-step conversational flows and automated tasks.
 - **Direct MCP Integration:** Through [MCP](https://awslabs.github.io/mcp/servers/bedrock-kb-retrieval-mcp-server/), developers can query Knowledge Bases from various Integrated Development Environments (IDEs) such as Cursor or VSCode, or via the AWS Q CLI. This also enables building **custom internal tools** that allow product managers or data analysts to directly explore, validate, or audit specific private data points within the knowledge base, offering quick factual lookups outside of a conversational AI.
 
+![kb-mcp](./docs/assets/kb-mcp-integration-demo.gif)
+
 ### 🤖 Amazon Bedrock Agents: Orchestrating Advanced Workflows
 
 Amazon Bedrock Agents offer powerful reusability and collaboration patterns for complex automation:
@@ -87,7 +89,7 @@ Amazon Bedrock Agents offer powerful reusability and collaboration patterns for 
 - **Agent Flow as an API:** Individual Agent workflows can be exposed as APIs, providing powerful, task-oriented capabilities that can be consumed by other applications or services, whether for internal automation or as part of a public-facing product.
 - **Multi-Agent Collaboration:** For highly complex tasks, Amazon Bedrock Agents supports advanced multi-agent collaboration. A designated **Supervisor Agent** orchestrates sophisticated workflows by intelligently delegating specific sub-tasks to specialized **Collaborator Agents**. This modular approach allows for breaking down intricate problems, leveraging distinct areas of expertise, and seamlessly combining results to achieve comprehensive, automated solutions.
 
----
+## ![agent-integrations](./docs/assets/agent-integration-demo.gif)
 
 ## 💯 Building Robust AI Applications at Scale: A Well-Architected Approach
 
@@ -96,10 +98,10 @@ Building production-grade Generative AI applications requires a strong architect
 **Key Pillars for Production-Ready AI:**
 
 - **Operational Excellence:** Logging and monitoring (e.g., Model Invocation Logs, VPC Flow Logs) for continuous improvement and efficiency.
-- **Security:** Multi-layered protection with AWS WAF on top of CloudFront for protection at the edge, complemented by API keys, IAM least privilege, restrict networking firewall rules (NACL/SG), Bedrock Guardrails, and prompt injection defenses.
+- **Security:** Multi-layered protection with AWS WAF on top of CloudFront for protection at the edge, complemented by API keys, IAM least privilege, restricted networking firewall rules (NACL/SG), Bedrock Guardrails, and prompt injection defenses.
 - **Reliability:** High availability and fault tolerance via Multi-AZ VPC (with multiple NATs), reserved Lambda concurrency, API Gateway throttling, and Cross-Region Inference Profiles for enhanced resilience and throughput across geographies.
 - **Performance Efficiency:** Optimized resource utilization with serverless architecture, Lambda Provisioned Concurrency and Auto-Scaling for consistent low-latency responses, and global CDN (CloudFront).
-- **Cost Optimization:** Efficient resource sizing, pay-as-you-go models, Cost Allocation Tags for effective cost tracking, and effective Foundation Model selection strategy as we need 2 FM in this use-case _(one for the KB, and another for the Agent)_.
+- **Cost Optimization:** Efficient resource sizing, pay-as-you-go models, Cost Allocation Tags for effective cost tracking, and effective Foundation Model selection strategy as we need 2 FMs in this use-case _(one for the KB, and another for the Agent)_.
 
 This project's core architecture exemplifies these principles, particularly in its robust API communication and comprehensive security framework—critical aspects for any Generative AI solution operating at scale.
 
@@ -128,13 +130,15 @@ The request flow and key components are:
   - **Availability and Performance Efficiency:** To ensure responsiveness during traffic spikes and protect downstream resources, the key functions are configured with **reserved concurrency** and **provisioned concurrency**.
   - **Dependency Management:** Common libraries and dependencies are managed using **Lambda Layers** to promote code re-use, better organization, and smaller deployment package sizes.
 
-- **Guardrails:** To **prevent PII leakage**, filter harmful content, and block undesirable topics, both FMs uses Guardrails to enhance safety and privacy.
+- **Guardrails:** To **prevent PII leakage**, filter harmful content, and block undesirable topics, both FMs use Guardrails to enhance safety and privacy.
 
 - **Secure Prompt Engineering:** The prompts are designed with a safety-first approach leveraging industry best-practices to prevent prompt injections.
 
-- **Parameter Store:** Simplest approach to safely store all project's secrets
+- **Parameter Store:** Simplest approach to safely store all the project's secrets
 
 - **S3:** Stores **company's private data** with Restricted Resource Policies for Knowledge Base-only access, leveraging **SSE-KMS with Bucket Keys enabled** for enhanced key control, auditable access tracking by security teams, and cost optimization.
+
+- **Checkov Security Scanning:** Infrastructure code is continuously validated using Checkov to identify and prevent security misconfigurations, ensuring compliance with industry best practices and maintaining a strong security posture throughout the deployment pipeline.
 
 ### 🌐 Networking Architecture
 
